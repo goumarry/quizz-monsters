@@ -1,0 +1,60 @@
+Rôle : Tu es un développeur de jeux web full-stack expert, spécialisé dans les jeux HTML5 multijoueurs optimisés pour la plateforme CrazyGames.
+
+Objectif du projet : Développer un "Party Game" web en temps réel. Le jeu est une succession de mini-jeux très rapides (micro-jeux) avec un système de classement en direct.
+
+Style et Ambiance : Loufoque, rapide, intuitif. Les joueurs doivent comprendre ce qu'ils doivent faire en 1 seconde (ex: "Clique !", "Stoppe !", "Trouve !").
+
+Liberté d'action : Ce cahier des charges fixe le cadre. Je compte sur toi pour prendre des initiatives sur l'architecture technique exacte, l'organisation du code, et pour inventer de nouveaux mini-jeux créatifs qui respectent cet esprit.
+
+1. Fonctionnalités Multijoueur & Lobbies
+
+Système de salons (Lobbies) : >     * Création de salons privés avec un code à 4-6 caractères ou un lien d'invitation à partager à ses amis.
+
+Matchmaking / Salons publics aléatoires pour jouer avec des inconnus.
+
+Paramétrage du salon (par l'hôte) : Choix du nombre de manches (ex: 5, 10, 15) et de la difficulté ou durée des manches.
+
+Capacité : Doit pouvoir supporter "plein de personnes" (prévoir une architecture scalable, ex: 2 à 20+ joueurs par salon).
+
+2. Boucle de Gameplay (Game Loop)
+
+Attente : Les joueurs sont dans le lobby. Quand l'hôte lance la partie, compte à rebours.
+
+Phase de jeu : Un mini-jeu est tiré au sort. Un titre rapide s'affiche (ex: "Trouve le 7 !"). Le jeu dure entre 3 et 10 secondes.
+
+Résolution et Scoring : Un algorithme attribue des points en fonction de 1) la réussite de l'objectif et 2) la rapidité (le premier gagne plus de points).
+
+Classement (Leaderboard) : Affichage rapide du classement actualisé avec des animations de progression.
+
+Itération : Passage direct au mini-jeu suivant jusqu'à la fin des manches.
+
+3. Exemples de Mini-Jeux (pour donner le ton)
+
+Le Chrono Fou : Un chronomètre défile, il faut le stopper le plus proche possible d'une cible (ex: 3.00s).
+
+L'Intrus : Un écran rempli du chiffre "6", il faut trouver et cliquer sur l'unique "7".
+
+Spam Click : Cliquer le plus de fois possible sur un bouton en 5 secondes.
+
+Je te laisse carte blanche pour imaginer et implémenter 5 à 10 autres mini-jeux dans ce style.
+
+4. Contraintes Techniques & Déploiement
+
+Moteur / Front-end : HTML5 (JS vanilla, Canvas, ou un framework léger si tu le juges pertinent pour l'optimisation). Doit être ultra-léger et charger vite.
+
+Back-end / Réseau : Technologie temps réel de ton choix (ex: Node.js + WebSockets / Socket.io / Colyseus).
+
+CrazyGames : Le code doit être structuré pour pouvoir intégrer facilement le SDK CrazyGames plus tard (pubs, analytics).
+
+Comment nous allons procéder :
+Ne génère pas tout le code d'un coup. Commence par me proposer une stack technique précise et une architecture pour le projet. Une fois validée, nous commencerons par créer le système de lobby et le moteur central, avant d'ajouter les mini-jeux un par un.
+
+Quelques conseils avant de commencer
+L'architecture est cruciale : Avec plein de joueurs, il faut que le serveur synchronise bien les chronomètres de tout le monde pour que le calcul des points (basé sur la vitesse) soit juste, même si un joueur a une mauvaise connexion.
+
+Graphismes : Pour que ça reste "opti", utilise au maximum des formes géométriques, du texte stylisé (CSS) et des emojis au début, plutôt que de charger de grosses images.
+
+Use the claude_design MCP (https://api.anthropic.com/v1/design/mcp, auth via /design-login) to import this project:
+https://claude.ai/design/p/8cbafbbd-6b76-47f0-b997-93f30a76ab78?file=Quizz+Monsters+-+Charte+Graphique.dc.html
+
+Implement: Quizz Monsters - Charte Graphique.dc.html

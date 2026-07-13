@@ -1,0 +1,14 @@
+{
+  "name": "@quizz/server",
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "node --watch src/index.js",
+    "start": "node src/index.js"
+  },
+  "dependencies": {
+    "@quizz/shared": "*",
+    "express": "^4.21.2",
+    "socket.io": "^4.8.1"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "name": "quizz-monsters",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "shared",
+    "server",
+    "client"
+  ],
+  "scripts": {
+    "dev:server": "npm run dev -w server",
+    "dev:client": "npm run dev -w client",
+    "build": "npm run build -w client",
+    "start": "node server/src/index.js",
+    "test:e2e": "node scripts/e2e.js"
+  }
+}

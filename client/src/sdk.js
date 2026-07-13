@@ -5,6 +5,9 @@ import { sound } from './ui/sound.js';
 // chaque appel retombe proprement sur un no-op — le jeu reste jouable partout.
 const SDK = () => window.CrazyGames?.SDK;
 let available = false;
+// Mute demandé par la plateforme CrazyGames (bouton son de leur UI) : il est
+// prioritaire sur tout, et doit être ré-appliqué après une pub.
+let platformMuted = false;
 
 export const sdk = {
   async init() {
@@ -12,6 +15,14 @@ export const sdk = {
       if (!SDK()) return;
       await SDK().init();
       available = SDK().environment !== 'disabled';
+      if (available) {
+        platformMuted = !!SDK().game.settings?.muteAudio;
+        sound.muteAll(platformMuted);
+        SDK().game.addSettingsChangeListener((settings) => {
+          platformMuted = !!settings?.muteAudio;
+          sound.muteAll(platformMuted);
+        });
+      }
     } catch {
       available = false;
     }
@@ -42,7 +53,7 @@ export const sdk = {
     return new Promise((resolve) => {
       if (!available) return resolve();
       const done = () => {
-        sound.muteAll(false);
+        sound.muteAll(platformMuted); // ne pas ré-activer le son si la plateforme l'a coupé
         resolve();
       };
       try {
@@ -71,5 +82,33 @@ export const sdk = {
       try { return SDK().game.getInviteParam('code') ?? ''; } catch { /* no-op */ }
     }
     return '';
+  },
+
+  // Lancement « instant multiplayer » : CrazyGames demande au jeu de mettre
+  // directement le joueur dans un salon joignable.
+  get isInstantMultiplayer() {
+    if (available) {
+      try { return !!SDK().game.isInstantMultiplayer; } catch { /* no-op */ }
+    }
+    return false;
+  },
+
+  // Signale à la plateforme le salon courant (active le bouton "inviter des
+  // amis" côté CrazyGames). isJoinable = des amis peuvent encore rejoindre.
+  updateRoom(code, isJoinable) {
+    if (available) {
+      try { SDK().game.updateRoom({ roomId: code, isJoinable: !!isJoinable, inviteParams: { code } }); } catch { /* no-op */ }
+    }
+  },
+
+  leftRoom() {
+    if (available) try { SDK().game.leftRoom(); } catch { /* no-op */ }
+  },
+
+  // Un ami accepte une invitation pendant que le joueur est déjà en jeu.
+  onJoinRoom(cb) {
+    if (available) {
+      try { SDK().game.addJoinRoomListener((params) => cb(params?.code)); } catch { /* no-op */ }
+    }
   },
 };

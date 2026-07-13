@@ -1,6 +1,6 @@
 import './styles/main.css';
-import { S2C } from '@quizz/shared';
-import { socket, syncClock } from './net.js';
+import { S2C, C2S, ROOM } from '@quizz/shared';
+import { socket, syncClock, emitAck } from './net.js';
 import { store, setMyId } from './state.js';
 import { sdk } from './sdk.js';
 import { sound } from './ui/sound.js';
@@ -43,6 +43,8 @@ export function show(name, props) {
 socket.on('connect', async () => {
   setMyId(socket.id);
   await syncClock();
+  await sdkReady;
+  autoMultiplayer();
 });
 
 // Re-synchronise l'horloge régulièrement : l'heure du serveur peut être
@@ -52,6 +54,7 @@ setInterval(() => {
 }, 10000);
 
 socket.on('disconnect', () => {
+  sdk.leftRoom();
   if (currentName !== 'home') {
     show('home');
     toast('Connexion perdue… Reviens vite !');
@@ -60,6 +63,8 @@ socket.on('disconnect', () => {
 
 socket.on(S2C.STATE, (state) => {
   store.room = state;
+  // La plateforme CrazyGames suit le salon courant (bouton "inviter des amis").
+  sdk.updateRoom(state.code, state.state === 'lobby' && state.players.length < ROOM.MAX_PLAYERS);
   // Le lobby se re-rend à chaque mise à jour (arrivées, départs, réglages).
   if (state.state === 'lobby' && (currentName === 'lobby' || currentName === 'home' || currentName === 'victory')) {
     show('lobby');
@@ -96,8 +101,35 @@ socket.on(S2C.OVER, async (payload) => {
   show('victory', payload);
 });
 
-sdk.init().finally(() => {
-  // Lien d'invitation CrazyGames → pré-remplit le code du salon.
+const profile = () => ({ name: store.name, color: store.color, face: store.face, accessory: store.accessory });
+
+// Flux CrazyGames au lancement : lien d'invitation → rejoint directement le
+// salon de l'ami ; « instant multiplayer » → crée directement un salon joignable.
+let autoDone = false;
+async function autoMultiplayer() {
+  if (autoDone || !socket.connected || store.room) return;
+  autoDone = true;
+  if (store.inviteCode) {
+    const code = store.inviteCode;
+    store.inviteCode = '';
+    const res = await emitAck(C2S.JOIN, { code, ...profile() });
+    if (!res?.ok) toast(res?.error ?? 'Impossible de rejoindre ce salon.');
+  } else if (sdk.isInstantMultiplayer) {
+    await emitAck(C2S.CREATE, profile());
+  }
+}
+
+const sdkReady = sdk.init().finally(() => {
+  // Lien d'invitation CrazyGames → code du salon de l'ami.
   if (!store.inviteCode) store.inviteCode = String(sdk.inviteCode() ?? '').toUpperCase();
   show('home');
+  autoMultiplayer();
+  // Invitation acceptée alors qu'on est déjà en jeu : on change de salon.
+  sdk.onJoinRoom(async (code) => {
+    if (!code) return;
+    socket.emit(C2S.LEAVE);
+    const res = await emitAck(C2S.JOIN, { code: String(code).toUpperCase(), ...profile() });
+    if (res?.ok) show('lobby');
+    else toast(res?.error ?? 'Impossible de rejoindre ce salon.');
+  });
 });

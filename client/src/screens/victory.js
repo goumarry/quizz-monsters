@@ -3,6 +3,7 @@ import { socket, emitAck } from '../net.js';
 import { store, isHost } from '../state.js';
 import { esc, formatNum, toast } from '../ui/dom.js';
 import { monsterHTML } from '../ui/monster.js';
+import { sdk } from '../sdk.js';
 
 const BAR_HEIGHTS = { 1: 250, 2: 190, 3: 140 };
 
@@ -60,6 +61,7 @@ export function victoryScreen(root, { podium, leaderboard }) {
 
   root.querySelector('#quit').addEventListener('click', () => {
     socket.emit(C2S.LEAVE);
+    sdk.leftRoom();
     store.room = null;
     store.leaderboard = null;
     import('../main.js').then(({ show }) => show('home'));

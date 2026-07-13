@@ -158,6 +158,7 @@ export function lobbyScreen(root) {
 
   root.querySelector('#leave').addEventListener('click', () => {
     socket.emit(C2S.LEAVE);
+    sdk.leftRoom();
     store.room = null;
     import('../main.js').then(({ show }) => show('home'));
   });

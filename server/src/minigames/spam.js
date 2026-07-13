@@ -11,7 +11,7 @@ export default {
 
   create(settings) {
     return {
-      title: 'CLIQUE COMME UN FOU !',
+      title: { k: 'mg.spam.title' },
       duration: Math.round(5000 * (SPEEDS[settings.speed]?.mult ?? 1)),
       data: {},
       state: {},
@@ -34,5 +34,5 @@ export default {
     });
   },
 
-  formatResult: (e) => (e.detail ? `${e.detail.count} clic${e.detail.count > 1 ? 's' : ''}` : null),
+  formatResult: (e) => (e.detail ? { k: 'res.clicks', n: e.detail.count } : null),
 };

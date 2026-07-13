@@ -4,6 +4,7 @@ import { socket, syncClock, emitAck } from './net.js';
 import { store, setMyId } from './state.js';
 import { sdk } from './sdk.js';
 import { sound } from './ui/sound.js';
+import { t, tr, autodetect } from './ui/i18n.js';
 import { toast } from './ui/dom.js';
 import { homeScreen } from './screens/home.js';
 import { lobbyScreen } from './screens/lobby.js';
@@ -57,7 +58,7 @@ socket.on('disconnect', () => {
   sdk.leftRoom();
   if (currentName !== 'home') {
     show('home');
-    toast('Connexion perdue… Reviens vite !');
+    toast(t('net.lost'));
   }
 });
 
@@ -113,13 +114,15 @@ async function autoMultiplayer() {
     const code = store.inviteCode;
     store.inviteCode = '';
     const res = await emitAck(C2S.JOIN, { code, ...profile() });
-    if (!res?.ok) toast(res?.error ?? 'Impossible de rejoindre ce salon.');
+    if (!res?.ok) toast(res?.error ? tr(res.error) : t('err.join'));
   } else if (sdk.isInstantMultiplayer) {
     await emitAck(C2S.CREATE, profile());
   }
 }
 
 const sdkReady = sdk.init().finally(() => {
+  // La locale CrazyGames n'est connue qu'après l'init du SDK.
+  autodetect();
   // Lien d'invitation CrazyGames → code du salon de l'ami.
   if (!store.inviteCode) store.inviteCode = String(sdk.inviteCode() ?? '').toUpperCase();
   show('home');
@@ -130,6 +133,6 @@ const sdkReady = sdk.init().finally(() => {
     socket.emit(C2S.LEAVE);
     const res = await emitAck(C2S.JOIN, { code: String(code).toUpperCase(), ...profile() });
     if (res?.ok) show('lobby');
-    else toast(res?.error ?? 'Impossible de rejoindre ce salon.');
+    else toast(res?.error ? tr(res.error) : t('err.join'));
   });
 });

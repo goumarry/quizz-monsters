@@ -2,6 +2,7 @@ import { monsterHTML } from '../ui/monster.js';
 import { clock } from '../net.js';
 import { sound } from '../ui/sound.js';
 import { me } from '../state.js';
+import { t } from '../ui/i18n.js';
 
 export default {
   id: 'spam',
@@ -15,7 +16,7 @@ export default {
         <button id="spam-btn" style="background:none; border:none; cursor:pointer; padding:0; -webkit-tap-highlight-color:transparent;">
           <div id="spam-monster" style="transition:transform 0.06s ease;">${monsterHTML(p?.color ?? '#ff2e88', { size: 170, face: p?.face, accessory: p?.accessory })}</div>
         </button>
-        <span class="hint">Chaque clic sur le monstre compte !</span>
+        <span class="hint">${t('mg.spam.hint')}</span>
       </div>`;
 
     const countEl = area.querySelector('#spam-count');

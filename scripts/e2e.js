@@ -4,7 +4,7 @@
 // cet ordre à chaque manche, quel que soit le jeu tiré au sort.
 import { spawn } from 'node:child_process';
 import { io } from 'socket.io-client';
-import { C2S, S2C, shapeArea, COLOR_NAMES } from '@quizz/shared';
+import { C2S, S2C, shapeArea } from '@quizz/shared';
 
 const PORT = 3995;
 const URL = `http://localhost:${PORT}`;
@@ -83,9 +83,7 @@ const strategies = {
   },
   stroop(prep, bot) {
     // mode 'ink' → couleur de l'encre ; mode 'word' → couleur que dit le mot.
-    const answerHex = prep.data.mode === 'word'
-      ? Object.keys(COLOR_NAMES).find((h) => COLOR_NAMES[h] === prep.data.word)
-      : prep.data.ink;
+    const answerHex = prep.data.mode === 'word' ? prep.data.wordHex : prep.data.ink;
     const correct = prep.data.options.indexOf(answerHex);
     const wrong = (correct + 1) % prep.data.options.length;
     return [
@@ -233,8 +231,8 @@ try {
 
   const firstPrep = await once(botC, S2C.PREPARE);
   check(
-    firstPrep.round === 1 && firstPrep.total === ROUNDS && firstPrep.title && firstPrep.duration > 0,
-    `manche 1 reçue (« ${firstPrep.title} »)`,
+    firstPrep.round === 1 && firstPrep.total === ROUNDS && firstPrep.title?.k && firstPrep.duration > 0,
+    `manche 1 reçue (clé « ${firstPrep.title?.k} »)`,
   );
 
   // --- Fin de partie ---------------------------------------------------------------

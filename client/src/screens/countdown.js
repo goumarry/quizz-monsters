@@ -2,6 +2,7 @@ import { toLocal, clock } from '../net.js';
 import { store } from '../state.js';
 import { monsterHTML } from '../ui/monster.js';
 import { sound } from '../ui/sound.js';
+import { t } from '../ui/i18n.js';
 
 const RADIUS = 114;
 const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
@@ -15,7 +16,7 @@ export function countdownScreen(root, { startAt, seconds }) {
       <div style="width:560px; height:560px; border-radius:50%; background:radial-gradient(circle, rgba(255,46,136,0.25), transparent 70%);"></div>
     </div>
     <div style="position:relative; display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; gap:22px;">
-      <span style="font-size:14px; letter-spacing:3px; color:var(--text-dim); text-transform:uppercase; font-weight:700;">La partie commence dans</span>
+      <span style="font-size:14px; letter-spacing:3px; color:var(--text-dim); text-transform:uppercase; font-weight:700;">${t('countdown.startsIn')}</span>
       <div style="position:relative; width:260px; height:260px; display:flex; align-items:center; justify-content:center;">
         <svg width="260" height="260" style="position:absolute; top:0; left:0; transform:rotate(-90deg);">
           <circle cx="130" cy="130" r="${RADIUS}" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="14"></circle>
@@ -27,7 +28,7 @@ export function countdownScreen(root, { startAt, seconds }) {
       <div style="display:flex; gap:10px; margin-top:6px; flex-wrap:wrap; justify-content:center; max-width:600px;">
         ${players.map((p) => monsterHTML(p.color, { size: 36 })).join('')}
       </div>
-      <span style="font-size:14px; color:var(--text-dim);">${players.length} joueur${players.length > 1 ? 's' : ''} prêt${players.length > 1 ? 's' : ''} à jouer</span>
+      <span style="font-size:14px; color:var(--text-dim);">${t('countdown.ready', { n: players.length })}</span>
     </div>
   </div>`;
 

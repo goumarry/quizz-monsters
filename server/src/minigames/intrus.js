@@ -21,7 +21,7 @@ export default {
     const target = Math.floor(Math.random() * GRID_SIZE);
     const cells = Array.from({ length: GRID_SIZE }, (_, i) => (i === target ? odd : common));
     return {
-      title: `TROUVE LE ${odd} !`,
+      title: { k: 'mg.intrus.title', odd },
       duration: Math.round(6000 * (SPEEDS[settings.speed]?.mult ?? 1)),
       data: { cells, columns: 8 },
       state: { target },

@@ -32,9 +32,9 @@ export class LobbyManager {
   join(socket, payload, cb) {
     const code = String(payload?.code ?? '').trim().toUpperCase();
     const room = this.rooms.get(code);
-    if (!room) return cb?.({ ok: false, error: "Ce salon n'existe pas. Vérifie le code !" });
-    if (room.state !== 'lobby') return cb?.({ ok: false, error: 'La partie est déjà en cours dans ce salon.' });
-    if (room.players.size >= ROOM.MAX_PLAYERS) return cb?.({ ok: false, error: 'Ce salon est complet.' });
+    if (!room) return cb?.({ ok: false, error: { k: 'err.noRoom' } });
+    if (room.state !== 'lobby') return cb?.({ ok: false, error: { k: 'err.inProgress' } });
+    if (room.players.size >= ROOM.MAX_PLAYERS) return cb?.({ ok: false, error: { k: 'err.full' } });
     this.leave(socket);
     this.#addPlayer(room, socket, payload);
     cb?.({ ok: true, code: room.code });
@@ -101,9 +101,9 @@ export class LobbyManager {
 
   startGame(socket, cb) {
     const room = this.#roomOf(socket);
-    if (!room || room.hostId !== socket.id) return cb?.({ ok: false, error: "Seul l'hôte peut lancer la partie." });
-    if (room.state !== 'lobby') return cb?.({ ok: false, error: 'La partie est déjà lancée.' });
-    if (room.players.size < ROOM.MIN_PLAYERS) return cb?.({ ok: false, error: 'Pas assez de joueurs.' });
+    if (!room || room.hostId !== socket.id) return cb?.({ ok: false, error: { k: 'err.hostOnly' } });
+    if (room.state !== 'lobby') return cb?.({ ok: false, error: { k: 'err.already' } });
+    if (room.players.size < ROOM.MIN_PLAYERS) return cb?.({ ok: false, error: { k: 'err.notEnough' } });
     room.state = 'playing';
     room.game = new Game(this.io, room, {
       getRtt: (id) => this.rtts.get(id) ?? 200,

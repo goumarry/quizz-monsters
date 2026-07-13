@@ -1,5 +1,6 @@
 import { esc } from '../ui/dom.js';
 import { clock } from '../net.js';
+import { t, colorName } from '../ui/i18n.js';
 import { monsterHTML } from '../ui/monster.js';
 
 const HIDDEN_COLOR = '#3a2b63';
@@ -12,9 +13,7 @@ export default {
   mount(area, data, ctx) {
     area.innerHTML = `
       <div style="display:flex; flex-direction:column; align-items:center; gap:22px;">
-        <div id="memo-question" class="title-display" style="font-size:clamp(20px,3.5vh,30px); font-weight:700; min-height:40px; color:var(--text-muted);">
-          Mémorise-les tous…
-        </div>
+        <div id="memo-question" class="title-display" style="font-size:clamp(20px,3.5vh,30px); font-weight:700; min-height:40px; color:var(--text-muted);">${t('mg.memo.memorize')}</div>
         <div id="memo-grid" style="display:grid; grid-template-columns:repeat(4,1fr); gap:14px;">
           ${data.cells
             .map(
@@ -40,7 +39,7 @@ export default {
       grid.querySelectorAll('.memo-monster').forEach((el) => {
         el.innerHTML = monsterHTML(HIDDEN_COLOR, { size: 46 });
       });
-      question.innerHTML = `Où était le monstre <span style="color:${esc(data.targetColor)};">${esc(data.targetName)}</span> ?`;
+      question.innerHTML = t('mg.memo.where', { name: `<span style="color:${esc(data.targetColor)};">${esc(colorName(data.targetColor))}</span>` });
       question.style.color = 'var(--text)';
     };
 

@@ -191,12 +191,13 @@ export function defaultScore(entries) {
 }
 
 // Résumé de la réponse d'un joueur, affiché sur le classement pour que chacun
-// puisse se comparer (réponse donnée, temps, réflexe…). Chaque mini-jeu peut
-// fournir son propre format via def.formatResult(entry, round).
+// puisse se comparer (réponse donnée, temps, réflexe…). On envoie une CLÉ de
+// traduction (+ paramètres) : chaque client l'affiche dans sa langue. Chaque
+// mini-jeu peut fournir son propre format via def.formatResult(entry, round).
 function resultText(e, r) {
-  if (e.elapsed === null && !e.detail) return 'Pas de réponse';
+  if (e.elapsed === null && !e.detail) return { k: 'res.none' };
   const custom = r.def.formatResult?.(e, r);
   if (custom) return custom;
-  const secs = (e.elapsed / 1000).toFixed(1).replace('.', ',');
-  return e.success ? `Trouvé en ${secs} s` : 'Raté…';
+  if (!e.success) return { k: 'res.missed' };
+  return { k: 'res.found', s: (e.elapsed / 1000).toFixed(1) };
 }

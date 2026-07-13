@@ -25,7 +25,7 @@ export default {
     const water = A === 0 ? -C / B : (-B + Math.sqrt(B * B - 4 * A * C)) / (2 * A);
 
     return {
-      title: "DEVINE LE % D'EAU !",
+      title: { k: 'mg.verre.title' },
       duration: Math.round(8000 * (SPEEDS[settings.speed]?.mult ?? 1)),
       data: { wb: Math.round(wb), wt: Math.round(wt), water: Math.round(water * 1000) / 1000 },
       state: { level },
@@ -54,5 +54,5 @@ export default {
   },
   revealMs: 3200,
 
-  formatResult: (e) => (e.detail ? `Estimé ${e.detail.guess} % (à ${e.detail.diff})` : null),
+  formatResult: (e) => (e.detail ? { k: 'res.verre', g: e.detail.guess, d: e.detail.diff } : null),
 };

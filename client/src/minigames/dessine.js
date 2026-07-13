@@ -1,5 +1,6 @@
 import { me } from '../state.js';
 import { clock } from '../net.js';
+import { t } from '../ui/i18n.js';
 
 // Trait Parfait : dessine la forme demandée (rond ou carré) d'un seul trait
 // sur le canvas. Au lâcher, les points normalisés partent au serveur qui
@@ -8,10 +9,10 @@ export default {
   id: 'dessine',
 
   mount(area, data, ctx) {
-    const label = data.shape === 'rond' ? 'un rond ◯' : 'un carré ▢';
+
     area.innerHTML = `
       <div style="display:flex; flex-direction:column; align-items:center; gap:16px; width:100%;">
-        <span id="dessine-hint" class="hint" style="font-size:15px;">Dessine ${label} d'un seul trait — lâche pour valider !</span>
+        <span id="dessine-hint" class="hint" style="font-size:15px;">${t(data.shape === 'rond' ? 'mg.dessine.hintRond' : 'mg.dessine.hintCarre')}</span>
         <div style="position:relative; width:min(56vh, 90%); aspect-ratio:1;">
           <canvas id="dessine-canvas" style="position:absolute; inset:0; width:100%; height:100%;
             background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:24px;
@@ -80,11 +81,11 @@ export default {
       const res = await ctx.submit({ points: [...points] });
       const pct = res?.detail?.pct ?? 0;
       canvas.style.opacity = '0.45';
-      hint.textContent = 'Trait envoyé !';
+      hint.textContent = t('mg.dessine.sent');
       scoreEl.textContent = `${pct} %`;
       scoreEl.style.color = res?.success ? 'var(--menthe)' : 'var(--corail)';
       scoreEl.style.display = 'flex';
-      ctx.answered(res?.success, { emoji: '✏️', title: `Précision : ${pct} %` });
+      ctx.answered(res?.success, { emoji: '✏️', title: t('mg.dessine.precision', { pct }) });
     };
     canvas.addEventListener('pointerup', finish);
     canvas.addEventListener('pointercancel', finish);

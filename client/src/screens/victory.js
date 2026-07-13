@@ -4,6 +4,7 @@ import { store, isHost } from '../state.js';
 import { esc, formatNum, toast } from '../ui/dom.js';
 import { monsterHTML } from '../ui/monster.js';
 import { sdk } from '../sdk.js';
+import { t } from '../ui/i18n.js';
 
 const BAR_HEIGHTS = { 1: 250, 2: 190, 3: 140 };
 
@@ -26,9 +27,9 @@ export function victoryScreen(root, { podium, leaderboard }) {
   <div class="screen fade-in">
     ${confettiHTML}
     <div style="position:relative; display:flex; flex-direction:column; align-items:center; height:100%; padding:44px 24px 0; overflow:auto;">
-      <span style="font-size:13px; letter-spacing:2px; color:var(--text-dim); text-transform:uppercase; font-weight:700;">Partie terminée</span>
+      <span style="font-size:13px; letter-spacing:2px; color:var(--text-dim); text-transform:uppercase; font-weight:700;">${t('victory.over')}</span>
       <span class="title-display" style="font-size:clamp(26px,4vw,38px); font-weight:700; text-shadow:0 0 30px rgba(255,46,136,0.5); margin-top:8px; text-align:center;">
-        ${esc(winner?.name.toUpperCase() ?? '???')} REMPORTE LA PARTIE !
+        ${t('victory.wins', { name: esc(winner?.name.toUpperCase() ?? '???') })}
       </span>
 
       <div style="display:flex; align-items:flex-end; gap:26px; margin-top:44px;">
@@ -48,15 +49,15 @@ export function victoryScreen(root, { podium, leaderboard }) {
       </div>
 
       <div style="display:flex; gap:16px; margin:36px 0 44px;">
-        ${isHost() ? '<button id="replay" class="btn" style="padding:14px 40px; font-size:16px;">REJOUER</button>' : '<span style="align-self:center; font-size:13px; color:var(--text-dim);">L\'hôte peut relancer une partie…</span>'}
-        <button id="quit" class="btn btn-ghost" style="padding:12px 38px; font-size:16px;">QUITTER</button>
+        ${isHost() ? `<button id="replay" class="btn" style="padding:14px 40px; font-size:16px;">${t('victory.replay')}</button>` : `<span style="align-self:center; font-size:13px; color:var(--text-dim);">${t('victory.hostReplay')}</span>`}
+        <button id="quit" class="btn btn-ghost" style="padding:12px 38px; font-size:16px;">${t('victory.quit')}</button>
       </div>
     </div>
   </div>`;
 
   root.querySelector('#replay')?.addEventListener('click', async () => {
     const res = await emitAck(C2S.REPLAY);
-    if (!res?.ok) toast('Impossible de relancer.');
+    if (!res?.ok) toast(t('victory.replayFail'));
   });
 
   root.querySelector('#quit').addEventListener('click', () => {

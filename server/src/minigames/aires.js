@@ -56,7 +56,7 @@ export default {
     gen.shapes.forEach((s, i) => (s.color = colors[i % colors.length]));
 
     return {
-      title: 'CLIQUE LA PLUS GRANDE !',
+      title: { k: 'mg.aires.title' },
       duration: Math.round(7000 * (SPEEDS[settings.speed]?.mult ?? 1)),
       data: { shapes: gen.shapes },
       state: { best: gen.best },

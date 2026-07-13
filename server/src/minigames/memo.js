@@ -1,4 +1,4 @@
-import { SPEEDS, PLAYER_COLORS, COLOR_NAMES } from '@quizz/shared';
+import { SPEEDS, PLAYER_COLORS } from '@quizz/shared';
 
 // Mémoire Flash : une grille de monstres colorés s'affiche brièvement, puis
 // tout devient gris — où était le monstre de la couleur demandée ? La couleur
@@ -18,9 +18,9 @@ export default {
     );
     const showMs = Math.round(1600 * mult);
     return {
-      title: 'MÉMOIRE FLASH !',
+      title: { k: 'mg.memo.title' },
       duration: showMs + Math.round(3500 * mult),
-      data: { cells, showMs, targetColor, targetName: COLOR_NAMES[targetColor] },
+      data: { cells, showMs, targetColor }, // le client localise le nom de la couleur
       state: { target },
     };
   },

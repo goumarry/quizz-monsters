@@ -1,4 +1,5 @@
 import { esc } from '../ui/dom.js';
+import { t, colorName } from '../ui/i18n.js';
 
 // Effet Stroop, deux variantes selon data.mode :
 //  - 'ink'  → clique la pastille de la couleur de L'ENCRE du mot.
@@ -10,7 +11,7 @@ export default {
     area.innerHTML = `
       <div style="display:flex; flex-direction:column; align-items:center; gap:44px;">
         <div class="title-display" style="font-size:clamp(60px,12vh,110px); font-weight:700; color:${esc(data.ink)}; text-shadow:0 0 50px ${esc(data.ink)}66; letter-spacing:2px;">
-          ${esc(data.word)}
+          ${esc(colorName(data.wordHex))}
         </div>
         <div style="display:flex; gap:18px; flex-wrap:wrap; justify-content:center;">
           ${data.options
@@ -22,9 +23,7 @@ export default {
             )
             .join('')}
         </div>
-        <span class="hint">${data.mode === 'word'
-          ? "Clique la couleur que dit le mot, pas l'encre !"
-          : "Clique la couleur de l'encre, pas le mot !"}</span>
+        <span class="hint">${t(data.mode === 'word' ? 'mg.stroop.hintWord' : 'mg.stroop.hintInk')}</span>
       </div>`;
 
     let locked = false;

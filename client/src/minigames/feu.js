@@ -2,6 +2,7 @@
 // Toute la zone reste cliquable (équitable), mais le visuel est doux : seul le
 // disque change de couleur. Cliquer pendant le rouge = faux départ = 0 point.
 import { sound } from '../ui/sound.js';
+import { t } from '../ui/i18n.js';
 import { clock } from '../net.js';
 
 export default {
@@ -17,8 +18,8 @@ export default {
           box-shadow:0 0 50px rgba(140,31,63,0.5), inset 0 -10px 0 rgba(0,0,0,0.25);
           display:flex; align-items:center; justify-content:center; font-size:clamp(50px,10vh,84px);
           transition:background 0.05s linear, box-shadow 0.05s linear;">✋</div>
-        <span id="feu-text" class="title-display" style="font-size:clamp(26px,5vh,42px); font-weight:700;">ATTENDS…</span>
-        <span id="feu-sub" class="hint">Clique dès que c'est vert !</span>
+        <span id="feu-text" class="title-display" style="font-size:clamp(26px,5vh,42px); font-weight:700;">${t('mg.feu.wait')}</span>
+        <span id="feu-sub" class="hint">${t('mg.feu.hint')}</span>
       </button>`;
 
     const panel = area.querySelector('#feu-panel');
@@ -37,7 +38,7 @@ export default {
         light.style.background = 'var(--menthe)';
         light.style.boxShadow = '0 0 70px rgba(46,255,199,0.55), inset 0 -10px 0 rgba(0,0,0,0.18)';
         light.textContent = '⚡';
-        text.textContent = 'CLIQUE !';
+        text.textContent = t('mg.feu.click');
         text.style.color = 'var(--menthe)';
         sub.style.visibility = 'hidden';
         sound.play('go');
@@ -55,12 +56,12 @@ export default {
         light.style.background = 'var(--corail)';
         light.style.boxShadow = '0 0 60px rgba(255,93,93,0.5), inset 0 -10px 0 rgba(0,0,0,0.2)';
         light.textContent = '💥';
-        text.textContent = 'FAUX DÉPART !';
+        text.textContent = t('mg.feu.false');
         text.style.color = 'var(--corail)';
-        ctx.answered(false, { emoji: '🚨', title: 'Faux départ !' });
+        ctx.answered(false, { emoji: '🚨', title: t('res.falsestart') });
       } else {
         text.textContent = `${reaction} ms`;
-        ctx.answered(res?.success, { emoji: '⚡', title: `Réflexe : ${reaction} ms` });
+        ctx.answered(res?.success, { emoji: '⚡', title: t('res.reflex', { ms: reaction }) });
       }
     });
 

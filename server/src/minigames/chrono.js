@@ -12,7 +12,7 @@ export default {
     const mult = SPEEDS[settings.speed]?.mult ?? 1;
     const target = Math.round((2500 + Math.random() * 2500) * mult);
     return {
-      title: `STOPPE À ${(target / 1000).toFixed(2)}s !`,
+      title: { k: 'mg.chrono.title', s: (target / 1000).toFixed(2) },
       duration: target + 2500,
       data: { target },
       state: { target },
@@ -34,5 +34,5 @@ export default {
     }
   },
 
-  formatResult: (e) => (e.detail ? `À ${e.detail.diff} ms de la cible` : null),
+  formatResult: (e) => (e.detail ? { k: 'res.chrono', ms: e.detail.diff } : null),
 };

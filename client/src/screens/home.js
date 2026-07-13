@@ -3,6 +3,7 @@ import { emitAck } from '../net.js';
 import { store, setName, setColor, setFace, setAccessory } from '../state.js';
 import { esc, toast } from '../ui/dom.js';
 import { monsterHTML } from '../ui/monster.js';
+import { t, tr, getLang, setLang, LANG_LIST } from '../ui/i18n.js';
 
 // Accueil minimaliste : pseudo, avatar (couleur + visage + accessoire),
 // Créer un salon — ou un code à rejoindre.
@@ -26,6 +27,13 @@ export function homeScreen(root) {
   <div class="screen fade-in">
     <div class="glow glow-rose"></div>
     <div class="glow glow-menthe"></div>
+
+    <!-- Sélecteur de langue. -->
+    <div id="langs" style="position:absolute; top:14px; right:16px; z-index:5; display:flex; gap:6px;">
+      ${LANG_LIST.map(
+        (l) => `<button data-lang="${l}" class="pill" style="font-size:11px; padding:5px 10px; ${l === getLang() ? 'color:var(--bg); background:var(--menthe);' : ''}">${l.toUpperCase()}</button>`,
+      ).join('')}
+    </div>
 
     <div style="position:relative; flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:18px; padding:24px; overflow:auto;">
       <h1 class="title-display" style="margin:0; font-size:clamp(32px,4.5vw,52px); text-shadow:0 0 40px rgba(255,46,136,0.6); letter-spacing:1px;">QUIZZ MONSTERS</h1>
@@ -51,24 +59,24 @@ export function homeScreen(root) {
         ${avatarPicker(AVATAR_ACCESSORIES, store.accessory, 'accessory', (a) => ({ face: store.face, accessory: a }))}
       </div>
 
-      <button id="random-skin" class="btn btn-ghost" style="font-size:13px; padding:9px 20px;">🎲 SKIN ALÉATOIRE</button>
+      <button id="random-skin" class="btn btn-ghost" style="font-size:13px; padding:9px 20px;">${t('home.random')}</button>
 
-      <input id="name" class="input" maxlength="14" value="${esc(store.name)}" placeholder="Ton pseudo"
+      <input id="name" class="input" maxlength="14" value="${esc(store.name)}" placeholder="${t('home.pseudo')}"
         style="width:240px; text-align:center; font-family:var(--font-display); font-size:18px; padding:14px;">
 
-      <button id="create" class="btn btn-big">Créer un salon !</button>
+      <button id="create" class="btn btn-big">${t('home.create')}</button>
 
       <div style="display:flex; align-items:center; gap:12px; color:var(--text-disabled); font-size:12px; font-weight:800; letter-spacing:2px; width:280px;">
-        <div style="flex:1; height:1px; background:rgba(255,255,255,0.1);"></div>OU<div style="flex:1; height:1px; background:rgba(255,255,255,0.1);"></div>
+        <div style="flex:1; height:1px; background:rgba(255,255,255,0.1);"></div>${t('home.or')}<div style="flex:1; height:1px; background:rgba(255,255,255,0.1);"></div>
       </div>
 
       <div style="display:flex; gap:10px;">
-        <input id="code" class="input input-code" maxlength="5" placeholder="CODE" value="${esc(store.inviteCode)}" style="width:130px;">
-        <button id="join" class="btn btn-menthe">REJOINDRE</button>
+        <input id="code" class="input input-code" maxlength="5" placeholder="${t('home.codePh')}" value="${esc(store.inviteCode)}" style="width:130px;">
+        <button id="join" class="btn btn-menthe">${t('home.join')}</button>
       </div>
 
       <a id="quickplay" href="#" style="font-size:13px; color:var(--text-dim); text-decoration:underline; text-underline-offset:4px;">
-        Partie publique aléatoire
+        ${t('home.quickplay')}
       </a>
     </div>
   </div>`;
@@ -87,6 +95,12 @@ export function homeScreen(root) {
     homeScreen(root);
   };
 
+  root.querySelector('#langs').addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-lang]');
+    if (!btn) return;
+    setLang(btn.dataset.lang);
+    rerender();
+  });
   root.querySelector('#colors').addEventListener('click', (e) => {
     const btn = e.target.closest('[data-color]');
     if (!btn) return;
@@ -115,13 +129,13 @@ export function homeScreen(root) {
 
   const act = async (event, payload) => {
     const res = await emitAck(event, payload);
-    if (!res?.ok) toast(res?.error ?? 'Oups, quelque chose a raté…');
+    if (!res?.ok) toast(res?.error ? tr(res.error) : t('home.oops'));
   };
 
   root.querySelector('#create').addEventListener('click', () => act(C2S.CREATE, readProfile()));
   root.querySelector('#join').addEventListener('click', () => {
     const code = root.querySelector('#code').value.trim().toUpperCase();
-    if (code.length < 4) return toast('Entre le code du salon (5 caractères).');
+    if (code.length < 4) return toast(t('home.codeShort'));
     act(C2S.JOIN, { code, ...readProfile() });
   });
   root.querySelector('#quickplay').addEventListener('click', (e) => {

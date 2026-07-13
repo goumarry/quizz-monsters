@@ -13,7 +13,7 @@ export default {
     const mult = SPEEDS[settings.speed]?.mult ?? 1;
     const goAt = Math.round((1200 + Math.random() * 2300) * mult);
     return {
-      title: 'CLIQUE AU VERT !',
+      title: { k: 'mg.feu.title' },
       duration: goAt + 1600,
       data: { goAt },
       state: { goAt },
@@ -41,5 +41,5 @@ export default {
   },
 
   formatResult: (e) =>
-    e.detail ? (e.detail.reaction < 0 ? 'Faux départ !' : `Réflexe : ${e.detail.reaction} ms`) : null,
+    e.detail ? (e.detail.reaction < 0 ? { k: 'res.falsestart' } : { k: 'res.reflex', ms: e.detail.reaction }) : null,
 };

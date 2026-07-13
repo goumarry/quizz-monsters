@@ -1,3 +1,5 @@
+import { t } from '../ui/i18n.js';
+
 export default {
   id: 'verre',
 
@@ -25,10 +27,10 @@ export default {
         </div>
 
         <div id="verre-panel" style="display:flex; flex-direction:column; align-items:center; gap:18px; width:280px;">
-          <span class="label">Ton estimation</span>
+          <span class="label">${t('mg.verre.estimate')}</span>
           <div id="verre-value" class="title-display" style="font-size:76px; font-weight:700; color:var(--menthe); font-variant-numeric:tabular-nums;">50%</div>
           <input id="verre-range" class="range" type="range" min="0" max="100" value="50">
-          <button id="verre-ok" class="btn btn-menthe" style="width:100%;">VALIDER</button>
+          <button id="verre-ok" class="btn btn-menthe" style="width:100%;">${t('mg.verre.validate')}</button>
         </div>
       </div>`;
 
@@ -46,7 +48,7 @@ export default {
       range.disabled = true;
       await ctx.submit({ pct: Number(range.value) });
       value.style.color = 'var(--text-dim)';
-      okBtn.textContent = 'ENVOYÉ ✓';
+      okBtn.textContent = t('mg.verre.sent');
     });
 
     return {
@@ -58,10 +60,10 @@ export default {
         const guess = Number(range.value);
         const diff = Math.abs(guess - level);
         area.querySelector('#verre-panel').innerHTML = `
-          <span class="label">La vraie valeur</span>
+          <span class="label">${t('mg.verre.truth')}</span>
           <div class="title-display" style="font-size:90px; font-weight:700; color:var(--soleil); text-shadow:0 0 40px rgba(255,214,10,0.5);">${level}%</div>
           <div style="font-size:16px; color:${diff <= 15 ? 'var(--menthe)' : 'var(--corail)'}; font-weight:700;">
-            Toi : ${guess}% (à ${diff} point${diff > 1 ? 's' : ''})
+            ${t('mg.verre.you', { g: guess, d: diff })}
           </div>`;
       },
     };

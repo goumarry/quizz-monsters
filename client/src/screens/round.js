@@ -4,20 +4,11 @@ import { store, me, myId } from '../state.js';
 import { esc, formatNum } from '../ui/dom.js';
 import { monsterHTML } from '../ui/monster.js';
 import { sound } from '../ui/sound.js';
+import { t, tr } from '../ui/i18n.js';
 import { getMinigame } from '../minigames/index.js';
 
-// Noms génériques affichés sur le tambour de la roulette de tirage.
-const GAME_NAMES = {
-  intrus: "TROUVE L'INTRUS !",
-  chrono: 'STOPPE PILE !',
-  spam: 'CLIQUE COMME UN FOU !',
-  aires: 'CLIQUE LA PLUS GRANDE !',
-  verre: "DEVINE LE % D'EAU !",
-  feu: 'CLIQUE AU VERT !',
-  stroop: 'LA COULEUR, PAS LE MOT !',
-  memo: 'MÉMOIRE FLASH !',
-  dessine: 'DESSINE LA FORME !',
-};
+// Ids des mini-jeux du tambour de la roulette (noms localisés via mg.<id>.name).
+const GAME_IDS = ['intrus', 'chrono', 'spam', 'aires', 'verre', 'feu', 'stroop', 'memo', 'dessine'];
 const SLOT_ITEM_H = 96; // = hauteur .slot-item / .slot-frame (main.css)
 
 export function roundScreen(root, prep) {
@@ -33,11 +24,11 @@ export function roundScreen(root, prep) {
     <div style="position:relative; display:flex; flex-direction:column; height:100%;">
 
       <div style="display:flex; align-items:center; justify-content:space-between; gap:16px; padding:24px 44px 0;">
-        <span class="title-display" style="font-size:15px; font-weight:600; color:var(--text-dim); background:var(--surface-2); padding:8px 18px; border-radius:20px; white-space:nowrap;">MANCHE ${round}/${total}</span>
-        <span class="title-display" style="font-size:clamp(15px,2vw,24px); font-weight:700; color:var(--bg); background:var(--rose); padding:12px 36px; border-radius:20px; box-shadow:0 6px 0 var(--rose-shadow); text-align:center;">${esc(title)}</span>
+        <span class="title-display" style="font-size:15px; font-weight:600; color:var(--text-dim); background:var(--surface-2); padding:8px 18px; border-radius:20px; white-space:nowrap;">${t('round.label', { r: round, t: total })}</span>
+        <span class="title-display" style="font-size:clamp(15px,2vw,24px); font-weight:700; color:var(--bg); background:var(--rose); padding:12px 36px; border-radius:20px; box-shadow:0 6px 0 var(--rose-shadow); text-align:center;">${esc(tr(title))}</span>
         <div style="display:flex; align-items:center; gap:10px; background:var(--surface-2); padding:8px 16px; border-radius:20px; white-space:nowrap;">
           ${monsterHTML(player?.color ?? '#ff2e88', { size: 28, face: player?.face, accessory: player?.accessory })}
-          <span id="my-score" class="title-display" style="font-size:15px; font-weight:600;">${formatNum(player?.score ?? 0)} pts</span>
+          <span id="my-score" class="title-display" style="font-size:15px; font-weight:600;">${t('round.pts', { n: formatNum(player?.score ?? 0) })}</span>
         </div>
       </div>
 
@@ -49,7 +40,7 @@ export function roundScreen(root, prep) {
         <div id="area" style="flex:1; display:flex; align-items:center; justify-content:center; position:relative; min-width:0;"></div>
 
         <div style="width:220px; display:none; flex-direction:column; gap:14px;" class="live-panel">
-          <span class="label">En direct</span>
+          <span class="label">${t('round.live')}</span>
           ${top3
             .map(
               (p) => `
@@ -57,7 +48,7 @@ export function roundScreen(root, prep) {
                 ${monsterHTML(p.color, { size: 30, face: p.face, accessory: p.accessory })}
                 <div style="display:flex; flex-direction:column; min-width:0;">
                   <span class="title-display" style="font-size:13px; font-weight:600; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${esc(p.name)}</span>
-                  <span style="font-size:11px; color:var(--text-dim);">${formatNum(p.score)} pts</span>
+                  <span style="font-size:11px; color:var(--text-dim);">${t('round.pts', { n: formatNum(p.score) })}</span>
                 </div>
               </div>`,
             )
@@ -66,7 +57,7 @@ export function roundScreen(root, prep) {
       </div>
 
       <div id="splash" style="position:absolute; inset:0; z-index:10; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:26px; background:linear-gradient(160deg,#1f1440 0%,#2a1a52 55%,#1f1440 100%);">
-        <span style="font-size:14px; letter-spacing:3px; color:var(--text-dim); text-transform:uppercase; font-weight:700;">Manche ${round}/${total} — tirage du mini-jeu…</span>
+        <span style="font-size:14px; letter-spacing:3px; color:var(--text-dim); text-transform:uppercase; font-weight:700;">${t('round.label', { r: round, t: total })} — ${t('round.draw')}</span>
         <div class="slot-frame">
           <div class="slot-marker left"></div>
           <div class="slot-marker right"></div>
@@ -78,7 +69,7 @@ export function roundScreen(root, prep) {
       <div id="waiting" style="position:absolute; inset:0; z-index:9; display:none; flex-direction:column; align-items:center; justify-content:center; gap:14px; background:rgba(21,12,43,0.82); backdrop-filter:blur(3px);">
         <div id="waiting-emoji" style="font-size:56px;"></div>
         <div id="waiting-title" class="title-display" style="font-size:34px; font-weight:700;"></div>
-        <div style="font-size:14px; color:var(--text-muted);">En attente des autres monstres…</div>
+        <div style="font-size:14px; color:var(--text-muted);">${t('round.waiting')}</div>
       </div>
     </div>
   </div>`;
@@ -92,11 +83,11 @@ export function roundScreen(root, prep) {
   // Roulette façon casino : le tambour défile sur les noms des mini-jeux et
   // ralentit jusqu'à s'arrêter sur celui qui vient d'être tiré.
   const reel = root.querySelector('#slot-reel');
-  const pool = Object.values(GAME_NAMES);
+  const pool = GAME_IDS.map((id) => t(`mg.${id}.name`));
   const slotItems = [
     ...[...pool].sort(() => Math.random() - 0.5),
     ...[...pool].sort(() => Math.random() - 0.5),
-    title,
+    tr(title),
   ];
   reel.innerHTML = slotItems.map((t) => `<div class="slot-item">${esc(t)}</div>`).join('');
   const slotTravel = slotItems.length - 1; // en nombre d'items
@@ -126,7 +117,7 @@ export function roundScreen(root, prep) {
       setTimeout(() => {
         waiting.style.display = 'flex';
         root.querySelector('#waiting-emoji').textContent = custom.emoji ?? (success ? '🎉' : '💥');
-        root.querySelector('#waiting-title').textContent = custom.title ?? (success ? 'Bien joué !' : 'Raté…');
+        root.querySelector('#waiting-title').textContent = custom.title ?? (success ? t('round.good') : t('round.missed'));
         root.querySelector('#waiting-title').style.color = success ? 'var(--menthe)' : 'var(--corail)';
       }, 450);
     },

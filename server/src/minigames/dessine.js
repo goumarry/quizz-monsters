@@ -51,7 +51,7 @@ export default {
   create(settings) {
     const shape = Math.random() < 0.5 ? 'rond' : 'carre';
     return {
-      title: shape === 'rond' ? 'DESSINE UN ROND !' : 'DESSINE UN CARRÉ !',
+      title: { k: shape === 'rond' ? 'mg.dessine.rond' : 'mg.dessine.carre' },
       duration: Math.round(9000 * (SPEEDS[settings.speed]?.mult ?? 1)),
       data: { shape },
       state: { shape },
@@ -67,5 +67,5 @@ export default {
     for (const e of entries) e.gained = e.detail ? e.detail.pct * 10 : 0;
   },
 
-  formatResult: (e) => (e.detail ? `Précision : ${e.detail.pct} %` : null),
+  formatResult: (e) => (e.detail ? { k: 'res.precision', pct: e.detail.pct } : null),
 };

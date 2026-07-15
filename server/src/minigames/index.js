@@ -7,6 +7,9 @@ import feu from './feu.js';
 import stroop from './stroop.js';
 import memo from './memo.js';
 import dessine from './dessine.js';
+import code from './code.js';
+import equation from './equation.js';
+import foule from './foule.js';
 
 // Interface d'un mini-jeu côté serveur :
 //   id            — identifiant, doit correspondre au module client du même nom
@@ -14,7 +17,7 @@ import dessine from './dessine.js';
 //   create(settings) → { title, duration, data (public), state (secret serveur) }
 //   validate(round, data, elapsed) → { success, detail?, clientDetail? }
 //   score(entries, round)? — optionnel, sinon scoring par défaut (base + bonus rapidité)
-const REGISTRY = [intrus, chrono, spam, aires, verre, feu, stroop, memo, dessine];
+const REGISTRY = [intrus, chrono, spam, aires, verre, feu, stroop, memo, dessine, code, equation, foule];
 
 export function pickMinigame(lastId) {
   // QM_FORCE_GAME=<id> force un mini-jeu (pratique pour tester en dev).

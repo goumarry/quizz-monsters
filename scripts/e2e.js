@@ -140,6 +140,36 @@ const strategies = {
       { delay: 500, data: { points: trace(0, true) } },
     ][bot];
   },
+  code(prep, bot) {
+    const seq = prep.data.sequence;
+    const after = seq.length * (prep.data.digitMs + prep.data.gapMs);
+    const wrong = seq.map((d, i) => (i === 0 ? (d + 1) % 10 : d));
+    return [
+      { delay: after + 300, data: { digits: seq } },
+      { delay: after + 900, data: { digits: seq } },
+      { delay: after + 500, data: { digits: wrong } },
+    ][bot];
+  },
+  equation(prep, bot) {
+    const answer = { a: prep.data.a, b: prep.data.b, c: prep.data.c }[prep.data.slot];
+    const wrong = answer + 1;
+    return [
+      { delay: 200, data: { value: answer } },
+      { delay: 600, data: { value: answer } },
+      { delay: 400, data: { value: wrong } },
+    ][bot];
+  },
+  foule(prep, bot) {
+    const moreSide = prep.data.left.length > prep.data.right.length ? 'left' : 'right';
+    const lessSide = moreSide === 'left' ? 'right' : 'left';
+    const answer = prep.data.mode === 'most' ? moreSide : lessSide;
+    const wrong = answer === 'left' ? 'right' : 'left';
+    return [
+      { delay: 200, data: { side: answer } },
+      { delay: 600, data: { side: answer } },
+      { delay: 400, data: { side: wrong } },
+    ][bot];
+  },
 };
 
 // --- Démarrage du serveur ----------------------------------------------------

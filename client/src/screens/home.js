@@ -4,6 +4,7 @@ import { store, setName, setColor, setFace, setAccessory } from '../state.js';
 import { esc, toast } from '../ui/dom.js';
 import { monsterHTML } from '../ui/monster.js';
 import { t, tr, getLang, setLang, LANG_LIST } from '../ui/i18n.js';
+import { flagIcon } from '../ui/flags.js';
 
 // Accueil minimaliste : pseudo, avatar (couleur + visage + accessoire),
 // Créer un salon — ou un code à rejoindre.
@@ -28,11 +29,20 @@ export function homeScreen(root) {
     <div class="glow glow-rose"></div>
     <div class="glow glow-menthe"></div>
 
-    <!-- Sélecteur de langue. -->
-    <div id="langs" style="position:absolute; top:14px; right:16px; z-index:5; display:flex; gap:6px;">
-      ${LANG_LIST.map(
-        (l) => `<button data-lang="${l}" class="pill" style="font-size:11px; padding:5px 10px; ${l === getLang() ? 'color:var(--bg); background:var(--menthe);' : ''}">${l.toUpperCase()}</button>`,
-      ).join('')}
+    <!-- Sélecteur de langue : le drapeau de la langue actuelle, cliquer l'ouvre. -->
+    <div id="langs" style="position:absolute; top:14px; right:16px; z-index:20;">
+      <button id="lang-toggle" class="pill" style="padding:8px; line-height:0;" title="${getLang().toUpperCase()}">${flagIcon(getLang(), 26)}</button>
+      <div id="lang-menu" style="display:none; position:absolute; top:calc(100% + 8px); right:0; flex-direction:column; gap:6px;
+        background:var(--surface-2); border:1px solid var(--border); border-radius:16px; padding:8px;
+        box-shadow:0 10px 30px rgba(0,0,0,0.35);">
+        ${LANG_LIST.map(
+          (l) => `
+          <button data-lang="${l}" class="pill" style="display:flex; align-items:center; gap:8px; padding:6px 12px; justify-content:flex-start;
+            ${l === getLang() ? 'color:var(--bg); background:var(--menthe);' : ''}">
+            ${flagIcon(l, 22)}<span style="font-size:11px; font-family:var(--font-body); font-weight:700;">${l.toUpperCase()}</span>
+          </button>`,
+        ).join('')}
+      </div>
     </div>
 
     <div style="position:relative; flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:18px; padding:24px; overflow:auto;">
@@ -95,7 +105,18 @@ export function homeScreen(root) {
     homeScreen(root);
   };
 
-  root.querySelector('#langs').addEventListener('click', (e) => {
+  const langMenu = root.querySelector('#lang-menu');
+  root.querySelector('#lang-toggle').addEventListener('click', (e) => {
+    e.stopPropagation();
+    const open = langMenu.style.display === 'flex';
+    langMenu.style.display = open ? 'none' : 'flex';
+    if (!open) {
+      // Ferme le menu au prochain clic n'importe où ailleurs.
+      setTimeout(() => document.addEventListener('click', () => (langMenu.style.display = 'none'), { once: true }), 0);
+    }
+  });
+  langMenu.addEventListener('click', (e) => {
+    e.stopPropagation();
     const btn = e.target.closest('[data-lang]');
     if (!btn) return;
     setLang(btn.dataset.lang);

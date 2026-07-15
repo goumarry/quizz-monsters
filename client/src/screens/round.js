@@ -8,13 +8,16 @@ import { t, tr } from '../ui/i18n.js';
 import { getMinigame } from '../minigames/index.js';
 
 // Ids des mini-jeux du tambour de la roulette (noms localisés via mg.<id>.name).
-const GAME_IDS = ['intrus', 'chrono', 'spam', 'aires', 'verre', 'feu', 'stroop', 'memo', 'dessine'];
+const GAME_IDS = ['intrus', 'chrono', 'spam', 'aires', 'verre', 'feu', 'stroop', 'memo', 'dessine', 'code', 'equation', 'foule'];
 const SLOT_ITEM_H = 96; // = hauteur .slot-item / .slot-frame (main.css)
 
 export function roundScreen(root, prep) {
   const { round, total, minigameId, title, data, startAt, duration } = prep;
   const localStart = toLocal(startAt);
   const player = me();
+  // Le score à jour vient du dernier classement (room:state n'est pas rediffusé
+  // pendant la partie, son score y reste à 0).
+  const myScore = store.leaderboard?.find((p) => p.id === myId())?.score ?? player?.score ?? 0;
 
   const top3 = (store.leaderboard ?? store.room?.players.map((p, i) => ({ ...p, rank: i + 1 })) ?? [])
     .slice(0, 3);
@@ -28,7 +31,7 @@ export function roundScreen(root, prep) {
         <span class="title-display" style="font-size:clamp(15px,2vw,24px); font-weight:700; color:var(--bg); background:var(--rose); padding:12px 36px; border-radius:20px; box-shadow:0 6px 0 var(--rose-shadow); text-align:center;">${esc(tr(title))}</span>
         <div style="display:flex; align-items:center; gap:10px; background:var(--surface-2); padding:8px 16px; border-radius:20px; white-space:nowrap;">
           ${monsterHTML(player?.color ?? '#ff2e88', { size: 28, face: player?.face, accessory: player?.accessory })}
-          <span id="my-score" class="title-display" style="font-size:15px; font-weight:600;">${t('round.pts', { n: formatNum(player?.score ?? 0) })}</span>
+          <span id="my-score" class="title-display" style="font-size:15px; font-weight:600;">${t('round.pts', { n: formatNum(myScore) })}</span>
         </div>
       </div>
 

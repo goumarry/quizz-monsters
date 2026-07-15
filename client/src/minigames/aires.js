@@ -16,6 +16,33 @@ function shapeStyle(s) {
   return style;
 }
 
+// Visage de monstre (yeux + bouche, même style que la mascotte) dessiné dans
+// chaque forme. Le clip-path rogne aussi les enfants : l'ancre (x,y) et
+// l'échelle k sont ajustées par forme pour rester dans la zone visible.
+const INK = '#150c2b';
+const FACE_POS = {
+  tri: { y: 66, k: 0.85 },
+  triRight: { x: 33, y: 68, k: 0.8 },
+  semi: { y: 58 },
+  star: { y: 48, k: 0.6 },
+  cross: { k: 0.75 },
+  arrow: { x: 45, y: 50, k: 0.85 },
+};
+
+function faceHTML(type) {
+  const { x = 50, y = 52, k = 1 } = FACE_POS[type] || {};
+  const eye = 16 * k; // largeur d'un œil, en % de la forme
+  const eyeCss = (cx) => `position:absolute; left:${cx - eye / 2}%; top:${y - 10 * k}%; width:${eye}%;
+    aspect-ratio:1; background:#fff; border-radius:50%; display:flex; align-items:center;
+    justify-content:center; pointer-events:none;`;
+  const pupil = `<div style="width:42%; height:42%; background:${INK}; border-radius:50%;"></div>`;
+  return `
+    <div style="${eyeCss(x - 10 * k)}">${pupil}</div>
+    <div style="${eyeCss(x + 10 * k)}">${pupil}</div>
+    <div style="position:absolute; left:${x - 10 * k}%; top:${y + 7 * k}%; width:${20 * k}%;
+      aspect-ratio:2.2; background:${INK}; border-radius:0 0 999px 999px; pointer-events:none;"></div>`;
+}
+
 export default {
   id: 'aires',
 
@@ -23,7 +50,7 @@ export default {
     area.innerHTML = `
       <div id="aires-board" style="position:relative; width:min(76vh, 100%); aspect-ratio:1; background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:24px;">
         ${data.shapes
-          .map((s, i) => `<div class="aires-shape" data-i="${i}" style="${shapeStyle(s)}"></div>`)
+          .map((s, i) => `<div class="aires-shape" data-i="${i}" style="${shapeStyle(s)}">${faceHTML(s.type)}</div>`)
           .join('')}
       </div>`;
 

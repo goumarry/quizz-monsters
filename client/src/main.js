@@ -1,7 +1,9 @@
 import './styles/main.css';
 import { S2C, C2S, ROOM } from '@quizz/shared';
 import { socket, syncClock, emitAck } from './net.js';
-import { store, setMyId } from './state.js';
+import { store, setMyId, setColor, setFace, setAccessory, myId } from './state.js';
+import { initSave, recordGame } from './save.js';
+import { isUnlocked, itemId } from './ui/catalog.js';
 import { sdk } from './sdk.js';
 import { sound } from './ui/sound.js';
 import { t, tr, autodetect } from './ui/i18n.js';
@@ -92,6 +94,11 @@ socket.on(S2C.RESULT, (payload) => {
 
 // Fin de partie : pub interstitielle AVANT le classement final (podium).
 socket.on(S2C.OVER, async (payload) => {
+  // Gains persistants (pièces + meilleur score) calculés sur MON résultat.
+  const mine = payload.leaderboard?.find((p) => p.id === myId());
+  payload.gains = mine
+    ? recordGame({ score: mine.score, players: payload.leaderboard.length, rank: mine.rank })
+    : null;
   sdk.gameplayStop();
   if (sdk.hasAds) {
     show('ad');
@@ -123,6 +130,13 @@ async function autoMultiplayer() {
 const sdkReady = sdk.init().finally(() => {
   // La locale CrazyGames n'est connue qu'après l'init du SDK.
   autodetect();
+  // Sauvegarde (pièces, best, items) : lue après l'init du SDK (module data).
+  // Première migration : on offre au joueur les items qu'il portait déjà.
+  initSave([itemId('color', store.color), itemId('face', store.face), itemId('accessory', store.accessory)]);
+  // Sélection non possédée (sauvegarde effacée…) → retour aux défauts gratuits.
+  if (!isUnlocked('color', store.color)) setColor(0);
+  if (!isUnlocked('face', store.face)) setFace('classique');
+  if (!isUnlocked('accessory', store.accessory)) setAccessory('aucun');
   // Lien d'invitation CrazyGames → code du salon de l'ami.
   if (!store.inviteCode) store.inviteCode = String(sdk.inviteCode() ?? '').toUpperCase();
   show('home');

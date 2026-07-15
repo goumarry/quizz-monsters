@@ -23,9 +23,10 @@ export const COLOR_NAMES = {
 };
 
 // Personnalisation d'avatar : variante de visage + accessoire (rendu 100 % CSS
-// côté client, voir client/src/ui/monster.js).
-export const AVATAR_FACES = ['classique', 'joyeux', 'cyclope', 'grognon'];
-export const AVATAR_ACCESSORIES = ['aucun', 'cornes', 'antennes', 'chapeau'];
+// côté client, voir client/src/ui/monster.js). Certains items sont payants
+// (pièces gagnées en jouant) — prix côté client dans ui/catalog.js.
+export const AVATAR_FACES = ['classique', 'joyeux', 'cyclope', 'grognon', 'vampire', 'etoiles'];
+export const AVATAR_ACCESSORIES = ['aucun', 'cornes', 'antennes', 'chapeau', 'noeud', 'couronne', 'halo'];
 
 export const MONSTER_NAMES = [
   'Glouglou', 'Pixel', 'Mochi', 'Turbo', 'Grrmlin', 'Zap', 'Bubulle', 'Nacho',

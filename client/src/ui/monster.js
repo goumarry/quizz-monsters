@@ -30,6 +30,27 @@ function accessoryHTML(accessory, w, h) {
          width:${Math.max(5, Math.round(w * 0.1))}px; height:${Math.max(5, Math.round(w * 0.1))}px;
          background:#ff2e88; border-radius:50%;"></div>`;
   }
+  if (accessory === 'noeud') {
+    const s = Math.round(w * 0.11);
+    const wing = (left, side) => `<div style="position:absolute; top:${-Math.round(h * 0.1)}px; left:${left}px; width:0; height:0;
+      border-top:${s}px solid transparent; border-bottom:${s}px solid transparent;
+      border-${side}:${Math.round(s * 1.5)}px solid #ff2e88; transform:rotate(-8deg);"></div>`;
+    const cx = Math.round(w * 0.62);
+    return wing(cx - Math.round(s * 1.5), 'left') + wing(cx, 'right')
+      + `<div style="position:absolute; top:${-Math.round(h * 0.1) + Math.round(s * 0.45)}px; left:${cx - Math.round(s * 0.55)}px;
+        width:${Math.round(s * 1.1)}px; height:${Math.round(s * 1.1)}px; background:#d61e6e; border-radius:50%;"></div>`;
+  }
+  if (accessory === 'couronne') {
+    return `<div style="position:absolute; top:${-Math.round(h * 0.19)}px; left:${Math.round(w * 0.3)}px;
+      width:${Math.round(w * 0.4)}px; height:${Math.round(h * 0.24)}px; background:#ffd60a; transform:rotate(-4deg);
+      clip-path:polygon(0 100%, 0 25%, 25% 55%, 50% 0, 75% 55%, 100% 25%, 100% 100%);
+      filter:drop-shadow(0 0 6px rgba(255,214,10,0.5));"></div>`;
+  }
+  if (accessory === 'halo') {
+    return `<div style="position:absolute; top:${-Math.round(h * 0.24)}px; left:${Math.round(w * 0.28)}px;
+      width:${Math.round(w * 0.44)}px; height:${Math.round(h * 0.14)}px; border:${Math.max(3, Math.round(w * 0.05))}px solid #ffd60a;
+      border-radius:50%; box-shadow:0 0 12px rgba(255,214,10,0.6), inset 0 0 6px rgba(255,214,10,0.4);"></div>`;
+  }
   return '';
 }
 
@@ -75,6 +96,29 @@ function faceHTML(face, w, h) {
     return brow(eye1 - Math.round(w * 0.01), 16) + brow(eye2 - Math.round(w * 0.01), -16)
       + roundEye(eye1) + roundEye(eye2)
       + mouth(Math.round(w * 0.24), Math.round(h * 0.1), `${Math.round(w * 0.12)}px ${Math.round(w * 0.12)}px 0 0`, Math.round(h * 0.68));
+  }
+
+  if (face === 'vampire') {
+    const mw = Math.round(w * 0.3);
+    const mtop = Math.round(h * 0.6);
+    const fangW = Math.max(2, Math.round(w * 0.035));
+    const fang = (left) => `<div style="position:absolute; top:${mtop + Math.round(h * 0.02)}px; left:${left}px; width:0; height:0;
+      border-left:${fangW}px solid transparent; border-right:${fangW}px solid transparent;
+      border-top:${Math.round(h * 0.1)}px solid #fff;"></div>`;
+    return roundEye(eye1) + roundEye(eye2)
+      + mouth(mw, Math.round(h * 0.15), `0 0 ${Math.round(w * 0.15)}px ${Math.round(w * 0.15)}px`, mtop)
+      + fang(Math.round(w * 0.4)) + fang(Math.round(w * 0.55));
+  }
+
+  if (face === 'etoiles') {
+    const star = Math.round(eye * 1.25);
+    const starEye = (left) => `<div style="position:absolute; top:${eyeTop - Math.round(eye * 0.15)}px; left:${left}px;
+      width:${star}px; height:${star}px; background:#ffd60a; filter:drop-shadow(0 0 4px rgba(255,214,10,0.7));
+      clip-path:polygon(50% 0%, 61.8% 36.3%, 100% 38.2%, 69.1% 60.6%, 80.9% 96.8%, 50% 75%, 19.1% 96.8%, 30.9% 60.6%, 0% 38.2%, 38.2% 36.3%);"></div>`;
+    const o = Math.round(w * 0.14);
+    return starEye(eye1 - Math.round(w * 0.02)) + starEye(eye2 - Math.round(w * 0.02))
+      + `<div style="position:absolute; top:${Math.round(h * 0.6)}px; left:${Math.round((w - o) / 2)}px;
+        width:${o}px; height:${o}px; background:${INK}; border-radius:50%;"></div>`;
   }
 
   // classique

@@ -5,10 +5,11 @@ import { esc, formatNum, toast } from '../ui/dom.js';
 import { monsterHTML } from '../ui/monster.js';
 import { sdk } from '../sdk.js';
 import { t } from '../ui/i18n.js';
+import { coinIcon } from '../ui/catalog.js';
 
 const BAR_HEIGHTS = { 1: 250, 2: 190, 3: 140 };
 
-export function victoryScreen(root, { podium, leaderboard }) {
+export function victoryScreen(root, { podium, leaderboard, gains }) {
   const winner = podium[0];
   // Ordre visuel du podium : 2e — 1er — 3e.
   const ordered = [podium[1], podium[0], podium[2]].filter(Boolean);
@@ -47,6 +48,18 @@ export function victoryScreen(root, { podium, leaderboard }) {
           )
           .join('')}
       </div>
+
+      ${gains ? `
+      <div class="fade-in" style="display:flex; flex-direction:column; align-items:center; gap:8px; margin-top:30px;
+        background:var(--surface-2); border:1px solid var(--border); border-radius:20px; padding:18px 34px;">
+        ${gains.newBest ? `<span class="title-display" style="font-size:15px; font-weight:700; color:var(--soleil); text-shadow:0 0 16px rgba(255,214,10,0.5);">🏆 ${t('victory.newBest', { n: formatNum(gains.best) })}</span>` : ''}
+        <span class="title-display" style="font-size:26px; font-weight:700; color:var(--soleil);">+${gains.coins} ${coinIcon(22)}</span>
+        <span class="hint" style="font-size:12px;">
+          ${gains.crowd > 1 ? `×${gains.crowd} ${t('victory.crowdBonus')}` : ''}
+          ${gains.podium > 1 ? ` · ×${gains.podium} ${t('victory.podiumBonus')}` : ''}
+          ${gains.crowd > 1 || gains.podium > 1 ? ' · ' : ''}${t('victory.balance', { n: formatNum(gains.total) })}
+        </span>
+      </div>` : ''}
 
       <div style="display:flex; gap:16px; margin:36px 0 44px;">
         ${isHost() ? `<button id="replay" class="btn" style="padding:14px 40px; font-size:16px;">${t('victory.replay')}</button>` : `<span style="align-self:center; font-size:13px; color:var(--text-dim);">${t('victory.hostReplay')}</span>`}

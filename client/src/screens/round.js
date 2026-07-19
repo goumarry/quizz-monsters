@@ -24,25 +24,25 @@ export function roundScreen(root, prep) {
 
   root.innerHTML = `
   <div class="screen fade-in">
-    <div style="position:relative; display:flex; flex-direction:column; height:100%;">
+    <div class="hud">
 
-      <div style="display:flex; align-items:center; justify-content:space-between; gap:16px; padding:24px 44px 0;">
-        <span class="title-display" style="font-size:15px; font-weight:600; color:var(--text-dim); background:var(--surface-2); padding:8px 18px; border-radius:20px; white-space:nowrap;">${t('round.label', { r: round, t: total })}</span>
-        <span class="title-display" style="font-size:clamp(15px,2vw,24px); font-weight:700; color:var(--bg); background:var(--rose); padding:12px 36px; border-radius:20px; box-shadow:0 6px 0 var(--rose-shadow); text-align:center;">${esc(tr(title))}</span>
-        <div style="display:flex; align-items:center; gap:10px; background:var(--surface-2); padding:8px 16px; border-radius:20px; white-space:nowrap;">
+      <div class="hud-top">
+        <span class="hud-round">${t('round.label', { r: round, t: total })}</span>
+        <span class="hud-title">${esc(tr(title))}</span>
+        <div class="hud-score">
           ${monsterHTML(player?.color ?? '#ff2e88', { size: 28, face: player?.face, accessory: player?.accessory })}
-          <span id="my-score" class="title-display" style="font-size:15px; font-weight:600;">${t('round.pts', { n: formatNum(myScore) })}</span>
+          <span id="my-score" class="hud-score-val">${t('round.pts', { n: formatNum(myScore) })}</span>
         </div>
       </div>
 
-      <div style="padding:20px 44px 0;">
+      <div class="hud-timebar">
         <div class="timebar"><div id="timebar-fill" class="timebar-fill"></div></div>
       </div>
 
-      <div style="flex:1; display:flex; gap:32px; padding:24px 44px 32px; min-height:0;">
-        <div id="area" style="flex:1; display:flex; align-items:center; justify-content:center; position:relative; min-width:0;"></div>
+      <div class="hud-body">
+        <div id="area" class="hud-area"></div>
 
-        <div style="width:220px; display:none; flex-direction:column; gap:14px;" class="live-panel">
+        <div class="live-panel">
           <span class="label">${t('round.live')}</span>
           ${top3
             .map(
@@ -59,19 +59,19 @@ export function roundScreen(root, prep) {
         </div>
       </div>
 
-      <div id="splash" style="position:absolute; inset:0; z-index:10; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:26px; background:linear-gradient(160deg,#1f1440 0%,#2a1a52 55%,#1f1440 100%);">
-        <span style="font-size:14px; letter-spacing:3px; color:var(--text-dim); text-transform:uppercase; font-weight:700;">${t('round.label', { r: round, t: total })} — ${t('round.draw')}</span>
+      <div id="splash" class="hud-splash">
+        <span style="font-size:clamp(11px,2vh,14px); letter-spacing:3px; color:var(--text-dim); text-transform:uppercase; font-weight:700; text-align:center;">${t('round.label', { r: round, t: total })} — ${t('round.draw')}</span>
         <div class="slot-frame">
           <div class="slot-marker left"></div>
           <div class="slot-marker right"></div>
           <div id="slot-reel"></div>
         </div>
-        <span id="splash-count" class="title-display" style="font-size:40px; color:var(--menthe); min-height:48px;"></span>
+        <span id="splash-count" class="title-display" style="font-size:clamp(26px,6vh,40px); color:var(--menthe); min-height:1.2em;"></span>
       </div>
 
-      <div id="waiting" style="position:absolute; inset:0; z-index:9; display:none; flex-direction:column; align-items:center; justify-content:center; gap:14px; background:rgba(21,12,43,0.82); backdrop-filter:blur(3px);">
-        <div id="waiting-emoji" style="font-size:56px;"></div>
-        <div id="waiting-title" class="title-display" style="font-size:34px; font-weight:700;"></div>
+      <div id="waiting" class="hud-waiting">
+        <div id="waiting-emoji" style="font-size:clamp(36px,9vh,56px);"></div>
+        <div id="waiting-title" class="title-display" style="font-size:clamp(22px,6vh,34px); font-weight:700;"></div>
         <div style="font-size:14px; color:var(--text-muted);">${t('round.waiting')}</div>
       </div>
     </div>

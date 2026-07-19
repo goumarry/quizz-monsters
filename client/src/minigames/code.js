@@ -14,10 +14,10 @@ export default {
     const showMs = sequence.length * (digitMs + gapMs);
 
     area.innerHTML = `
-      <div style="display:flex; flex-direction:column; align-items:center; gap:24px;">
-        <div id="code-question" class="title-display" style="font-size:clamp(16px,2.6vh,22px); font-weight:700; color:var(--text-muted); min-height:28px;">${t('mg.code.memorize')}</div>
-        <div id="code-digit" class="title-display" style="font-size:clamp(90px,18vh,150px); font-weight:700; font-variant-numeric:tabular-nums; min-height:1.1em; color:#3ad1ff; text-shadow:0 0 50px rgba(58,209,255,0.45);"></div>
-        <div id="code-slots" style="display:flex; gap:12px;"></div>
+      <div style="display:flex; flex-direction:column; align-items:center; gap:clamp(10px,3vh,24px);">
+        <div id="code-question" class="title-display" style="font-size:clamp(14px,2.6vh,22px); font-weight:700; color:var(--text-muted); min-height:1.2em; text-align:center;">${t('mg.code.memorize')}</div>
+        <div id="code-digit" class="title-display" style="font-size:clamp(64px,18vh,150px); font-weight:700; font-variant-numeric:tabular-nums; min-height:1.1em; color:#3ad1ff; text-shadow:0 0 50px rgba(58,209,255,0.45);"></div>
+        <div id="code-slots" style="display:flex; gap:clamp(6px,1.6vw,12px); flex-wrap:wrap; justify-content:center;"></div>
         <div id="code-pad" class="code-pad" style="display:none;"></div>
       </div>`;
 

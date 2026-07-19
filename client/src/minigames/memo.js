@@ -12,13 +12,13 @@ export default {
 
   mount(area, data, ctx) {
     area.innerHTML = `
-      <div style="display:flex; flex-direction:column; align-items:center; gap:22px;">
-        <div id="memo-question" class="title-display" style="font-size:clamp(20px,3.5vh,30px); font-weight:700; min-height:40px; color:var(--text-muted);">${t('mg.memo.memorize')}</div>
-        <div id="memo-grid" style="display:grid; grid-template-columns:repeat(4,1fr); gap:14px;">
+      <div style="display:flex; flex-direction:column; align-items:center; gap:clamp(10px,2.75vh,22px);">
+        <div id="memo-question" class="title-display" style="font-size:clamp(16px,3.5vh,30px); font-weight:700; min-height:1.3em; color:var(--text-muted); text-align:center;">${t('mg.memo.memorize')}</div>
+        <div id="memo-grid" style="display:grid; grid-template-columns:repeat(4,1fr); gap:clamp(6px,1.6vh,14px); width:min(90vw, 60vh, 410px);">
           ${data.cells
             .map(
               (color, i) => `
-              <button class="memo-cell" data-i="${i}" style="width:clamp(64px,10vh,92px); height:clamp(64px,10vh,92px);
+              <button class="memo-cell" data-i="${i}" style="width:100%; aspect-ratio:1;
                 background:var(--surface-2); border:1px solid var(--border); border-radius:18px; cursor:pointer;
                 display:flex; align-items:center; justify-content:center; transition:transform 0.08s ease;">
                 <span class="memo-monster" data-color="${esc(color)}">${monsterHTML(color, { size: 46 })}</span>

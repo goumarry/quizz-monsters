@@ -6,10 +6,10 @@ export default {
   mount(area, data, ctx) {
     const targetSec = (data.target / 1000).toFixed(2);
     area.innerHTML = `
-      <div style="display:flex; flex-direction:column; align-items:center; gap:26px;">
+      <div style="display:flex; flex-direction:column; align-items:center; gap:clamp(12px,3.25vh,26px);">
         <span class="label" style="font-size:14px;">${t('mg.chrono.target')} <span style="color:var(--soleil); font-size:18px;">${targetSec}s</span></span>
-        <div id="chrono-display" class="title-display" style="font-size:clamp(70px,14vh,130px); font-weight:700; font-variant-numeric:tabular-nums; text-shadow:0 0 50px rgba(46,255,199,0.45);">0.00</div>
-        <button id="chrono-stop" class="btn btn-big" style="font-size:26px; padding:22px 90px;">${t('mg.chrono.stop')}</button>
+        <div id="chrono-display" class="title-display" style="font-size:clamp(52px,14vh,130px); font-weight:700; font-variant-numeric:tabular-nums; text-shadow:0 0 50px rgba(46,255,199,0.45);">0.00</div>
+        <button id="chrono-stop" class="btn btn-big" style="font-size:clamp(18px,3.6vh,26px); padding:clamp(14px,3vh,22px) clamp(40px,12vw,90px);">${t('mg.chrono.stop')}</button>
         <span class="hint">${t('mg.chrono.hint')}</span>
       </div>`;
 

@@ -4,7 +4,7 @@ import { monsterHTML } from '../ui/monster.js';
 // éparpillés au hasard — chevauchements permis. Clic sur tout le panneau
 // (pas juste une icône) pour choisir un côté.
 const sidePanel = (key, crowd) => `
-  <button class="foule-side" data-side="${key}" style="position:relative; width:min(44%, 46vh); aspect-ratio:1;
+  <button class="foule-side" data-side="${key}" style="position:relative; width:min(46%, 42vh, 320px); aspect-ratio:1;
     align-self:center; cursor:pointer; overflow:hidden;
     background:var(--surface-2); border:2px solid transparent; border-radius:22px; transition:border-color 0.15s ease, opacity 0.15s ease;">
     ${crowd.map((m) => `<div style="position:absolute; left:${m.x}%; top:${m.y}%; pointer-events:none;">${monsterHTML(m.c, { size: 22 })}</div>`).join('')}
@@ -15,7 +15,7 @@ export default {
 
   mount(area, data, ctx) {
     area.innerHTML = `
-      <div style="display:flex; gap:18px; width:100%; height:100%; align-items:center; justify-content:center;">
+      <div style="display:flex; gap:clamp(10px,3vw,18px); width:100%; height:100%; align-items:center; justify-content:center; flex-wrap:wrap;">
         ${sidePanel('left', data.left)}
         ${sidePanel('right', data.right)}
       </div>`;

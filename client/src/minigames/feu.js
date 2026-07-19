@@ -11,7 +11,7 @@ export default {
   mount(area, data, ctx) {
     area.innerHTML = `
       <button id="feu-panel" style="width:100%; height:100%; border:none; cursor:pointer; background:none;
-        display:flex; flex-direction:column; align-items:center; justify-content:center; gap:26px;
+        display:flex; flex-direction:column; align-items:center; justify-content:center; gap:clamp(12px,3.25vh,26px);
         -webkit-tap-highlight-color:transparent;">
         <div id="feu-light" style="width:clamp(150px,28vh,260px); aspect-ratio:1; border-radius:50%;
           background:#8c1f3f; border:6px solid rgba(255,255,255,0.12);

@@ -11,8 +11,8 @@ export default {
     // Le monstre à cliquer, c'est TON monstre : couleur, visage et accessoire.
     const p = me();
     area.innerHTML = `
-      <div style="display:flex; flex-direction:column; align-items:center; gap:20px;">
-        <div id="spam-count" class="title-display" style="font-size:clamp(60px,12vh,110px); font-weight:700; color:var(--soleil); font-variant-numeric:tabular-nums;">0</div>
+      <div style="display:flex; flex-direction:column; align-items:center; gap:clamp(10px,2.5vh,20px);">
+        <div id="spam-count" class="title-display" style="font-size:clamp(48px,12vh,110px); font-weight:700; color:var(--soleil); font-variant-numeric:tabular-nums;">0</div>
         <button id="spam-btn" style="background:none; border:none; cursor:pointer; padding:0; -webkit-tap-highlight-color:transparent;">
           <div id="spam-monster" style="transition:transform 0.06s ease;">${monsterHTML(p?.color ?? '#ff2e88', { size: 170, face: p?.face, accessory: p?.accessory })}</div>
         </button>

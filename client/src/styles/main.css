@@ -41,6 +41,7 @@ a:hover { color: var(--rose); }
 .screen {
   position: relative;
   height: 100vh;
+  height: 100dvh; /* évite le rognage sous la barre d'adresse mobile */
   overflow: hidden;
   background: linear-gradient(160deg, #1f1440 0%, #2a1a52 55%, #1f1440 100%);
   display: flex;
@@ -318,6 +319,124 @@ a:hover { color: var(--rose); }
   border-radius: 10px;
 }
 
+/* ==== HUD de manche (round.js) ============================================== */
+/* Toutes les tailles sont fluides (clamp) pour rester lisibles aussi bien en
+   plein écran PC qu'en tablette paysage réduite ou en téléphone. */
+.hud { position: relative; display: flex; flex-direction: column; height: 100%; }
+
+.hud-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: clamp(6px, 1.6vw, 16px);
+  padding: clamp(10px, 3vh, 24px) clamp(12px, 4vw, 44px) 0;
+}
+.hud-round {
+  font-family: var(--font-display);
+  font-size: clamp(11px, 1.6vw, 15px);
+  font-weight: 600;
+  color: var(--text-dim);
+  background: var(--surface-2);
+  padding: clamp(5px, 1vh, 8px) clamp(10px, 2vw, 18px);
+  border-radius: 20px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.hud-title {
+  font-family: var(--font-display);
+  font-size: clamp(13px, 2.2vw, 24px);
+  font-weight: 700;
+  color: var(--bg);
+  background: var(--rose);
+  padding: clamp(7px, 1.6vh, 12px) clamp(12px, 3.4vw, 36px);
+  border-radius: 20px;
+  box-shadow: 0 6px 0 var(--rose-shadow);
+  text-align: center;
+  min-width: 0;
+  max-width: 56%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.hud-score {
+  display: flex;
+  align-items: center;
+  gap: clamp(6px, 1.4vw, 10px);
+  background: var(--surface-2);
+  padding: clamp(5px, 1vh, 8px) clamp(10px, 2vw, 16px);
+  border-radius: 20px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.hud-score-val { font-family: var(--font-display); font-size: clamp(11px, 1.6vw, 15px); font-weight: 600; }
+
+/* Téléphone étroit : on empile plutôt que de laisser le titre s'écraser. */
+@media (max-width: 460px) {
+  .hud-top { flex-wrap: wrap; justify-content: center; row-gap: 6px; }
+  .hud-title { order: -1; max-width: 100%; }
+}
+
+.hud-timebar { padding: clamp(8px, 2.5vh, 20px) clamp(12px, 4vw, 44px) 0; }
+
+.hud-body {
+  flex: 1;
+  display: flex;
+  gap: clamp(14px, 3vw, 32px);
+  padding: clamp(10px, 3vh, 24px) clamp(12px, 4vw, 44px) clamp(10px, 4vh, 32px);
+  min-height: 0;
+}
+.hud-area {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Filet de sécurité : si un mini-jeu déborde en hauteur (tablette paysage
+     réduite), on scrolle DANS la zone de jeu plutôt que de chevaucher le HUD.
+     `safe center` évite le piège flexbox qui rend le début du contenu
+     inaccessible au scroll quand il est centré ; ignoré si non supporté, le
+     `center` ci-dessus reste alors actif. */
+  align-items: safe center;
+  justify-content: safe center;
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+  overflow: auto;
+}
+.live-panel { width: 220px; display: none; flex-direction: column; gap: 14px; flex-shrink: 0; }
+/* Le mini-classement latéral prend trop de place utile en dessous d'un
+   certain gabarit (tablette/téléphone) : on le masque, quel que soit le
+   nombre de joueurs (le JS le montre via style inline, d'où le !important). */
+@media (max-width: 780px) {
+  .live-panel { display: none !important; }
+}
+
+.hud-splash {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(14px, 3vh, 26px);
+  background: linear-gradient(160deg, #1f1440 0%, #2a1a52 55%, #1f1440 100%);
+  padding: 16px;
+}
+.hud-waiting {
+  position: absolute;
+  inset: 0;
+  z-index: 9;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  background: rgba(21, 12, 43, 0.82);
+  backdrop-filter: blur(3px);
+  padding: 16px;
+  text-align: center;
+}
+
 /* ==== Classement ============================================================ */
 .lb-row {
   display: flex;
@@ -392,8 +511,8 @@ a:hover { color: var(--rose); }
 .code-pad {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
-  width: min(70vw, 280px);
+  gap: clamp(6px, 1.4vh, 12px);
+  width: min(70vw, 46vh, 280px);
 }
 .code-key {
   aspect-ratio: 1;

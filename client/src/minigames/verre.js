@@ -26,9 +26,9 @@ export default {
           </div>
         </div>
 
-        <div id="verre-panel" style="display:flex; flex-direction:column; align-items:center; gap:18px; width:280px;">
+        <div id="verre-panel" style="display:flex; flex-direction:column; align-items:center; gap:clamp(10px,2.2vh,18px); width:min(280px, 78vw);">
           <span class="label">${t('mg.verre.estimate')}</span>
-          <div id="verre-value" class="title-display" style="font-size:76px; font-weight:700; color:var(--menthe); font-variant-numeric:tabular-nums;">50%</div>
+          <div id="verre-value" class="title-display" style="font-size:clamp(44px,11vh,76px); font-weight:700; color:var(--menthe); font-variant-numeric:tabular-nums;">50%</div>
           <input id="verre-range" class="range" type="range" min="0" max="100" value="50">
           <button id="verre-ok" class="btn btn-menthe" style="width:100%;">${t('mg.verre.validate')}</button>
         </div>
@@ -61,7 +61,7 @@ export default {
         const diff = Math.abs(guess - level);
         area.querySelector('#verre-panel').innerHTML = `
           <span class="label">${t('mg.verre.truth')}</span>
-          <div class="title-display" style="font-size:90px; font-weight:700; color:var(--soleil); text-shadow:0 0 40px rgba(255,214,10,0.5);">${level}%</div>
+          <div class="title-display" style="font-size:clamp(50px,12vh,90px); font-weight:700; color:var(--soleil); text-shadow:0 0 40px rgba(255,214,10,0.5);">${level}%</div>
           <div style="font-size:16px; color:${diff <= 15 ? 'var(--menthe)' : 'var(--corail)'}; font-weight:700;">
             ${t('mg.verre.you', { g: guess, d: diff })}
           </div>`;

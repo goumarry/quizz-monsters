@@ -12,11 +12,11 @@ export default {
     parts[data.slot] = '<span style="color:var(--rose); text-shadow:0 0 20px rgba(255,46,136,0.5);">X</span>';
 
     area.innerHTML = `
-      <div style="display:flex; flex-direction:column; align-items:center; gap:26px;">
-        <div id="eq-display" class="title-display" style="font-size:clamp(32px,6.2vh,56px); font-weight:700; font-variant-numeric:tabular-nums;">
+      <div style="display:flex; flex-direction:column; align-items:center; gap:clamp(10px,3.25vh,26px);">
+        <div id="eq-display" class="title-display" style="font-size:clamp(26px,6.2vh,56px); font-weight:700; font-variant-numeric:tabular-nums; text-align:center;">
           ${parts.a} <span style="color:#3ad1ff;">${SYM[data.op]}</span> ${parts.b} <span style="color:var(--text-dim);">=</span> ${parts.c}
         </div>
-        <div id="eq-answer" class="code-slot" style="width:84px; height:48px; font-size:22px;">?</div>
+        <div id="eq-answer" class="code-slot" style="width:clamp(56px,10.5vh,84px); height:clamp(36px,7vh,48px); font-size:clamp(16px,3vh,22px);">?</div>
         <div id="eq-pad" class="code-pad"></div>
         <button id="eq-ok" class="btn btn-menthe" disabled>OK</button>
       </div>`;

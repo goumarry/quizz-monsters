@@ -15,15 +15,15 @@ export function countdownScreen(root, { startAt, seconds }) {
     <div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center;">
       <div style="width:560px; height:560px; border-radius:50%; background:radial-gradient(circle, rgba(255,46,136,0.25), transparent 70%);"></div>
     </div>
-    <div style="position:relative; display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; gap:22px;">
-      <span style="font-size:14px; letter-spacing:3px; color:var(--text-dim); text-transform:uppercase; font-weight:700;">${t('countdown.startsIn')}</span>
-      <div style="position:relative; width:260px; height:260px; display:flex; align-items:center; justify-content:center;">
-        <svg width="260" height="260" style="position:absolute; top:0; left:0; transform:rotate(-90deg);">
+    <div style="position:relative; display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; gap:clamp(12px,2.75vh,22px); padding:16px;">
+      <span style="font-size:14px; letter-spacing:3px; color:var(--text-dim); text-transform:uppercase; font-weight:700; text-align:center;">${t('countdown.startsIn')}</span>
+      <div style="position:relative; width:clamp(160px,34vh,260px); height:clamp(160px,34vh,260px); display:flex; align-items:center; justify-content:center;">
+        <svg viewBox="0 0 260 260" style="position:absolute; inset:0; width:100%; height:100%; transform:rotate(-90deg);">
           <circle cx="130" cy="130" r="${RADIUS}" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="14"></circle>
           <circle id="ring" cx="130" cy="130" r="${RADIUS}" fill="none" stroke="var(--menthe)" stroke-width="14"
             stroke-linecap="round" stroke-dasharray="${CIRCUMFERENCE}" stroke-dashoffset="0"></circle>
         </svg>
-        <span id="num" class="title-display" style="font-size:150px; text-shadow:0 0 60px rgba(255,46,136,0.7);">${seconds}</span>
+        <span id="num" class="title-display" style="font-size:clamp(64px,18vh,150px); text-shadow:0 0 60px rgba(255,46,136,0.7);">${seconds}</span>
       </div>
       <div style="display:flex; gap:10px; margin-top:6px; flex-wrap:wrap; justify-content:center; max-width:600px;">
         ${players.map((p) => monsterHTML(p.color, { size: 36 })).join('')}
@@ -42,7 +42,7 @@ export function countdownScreen(root, { startAt, seconds }) {
     const remaining = localStart - clock();
     if (remaining <= 0) {
       num.textContent = 'GO !';
-      num.style.fontSize = '110px';
+      num.style.fontSize = 'clamp(46px,13vh,110px)';
       ring.style.strokeDashoffset = CIRCUMFERENCE;
       sound.play('go');
       return;

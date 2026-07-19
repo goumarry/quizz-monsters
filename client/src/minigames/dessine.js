@@ -11,7 +11,7 @@ export default {
   mount(area, data, ctx) {
 
     area.innerHTML = `
-      <div style="display:flex; flex-direction:column; align-items:center; gap:16px; width:100%;">
+      <div style="display:flex; flex-direction:column; align-items:center; gap:clamp(8px,2vh,16px); width:100%;">
         <span id="dessine-hint" class="hint" style="font-size:15px;">${t(data.shape === 'rond' ? 'mg.dessine.hintRond' : 'mg.dessine.hintCarre')}</span>
         <div style="position:relative; width:min(56vh, 90%); aspect-ratio:1;">
           <canvas id="dessine-canvas" style="position:absolute; inset:0; width:100%; height:100%;

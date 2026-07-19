@@ -9,15 +9,15 @@ export default {
 
   mount(area, data, ctx) {
     area.innerHTML = `
-      <div style="display:flex; flex-direction:column; align-items:center; gap:44px;">
-        <div class="title-display" style="font-size:clamp(60px,12vh,110px); font-weight:700; color:${esc(data.ink)}; text-shadow:0 0 50px ${esc(data.ink)}66; letter-spacing:2px;">
+      <div style="display:flex; flex-direction:column; align-items:center; gap:clamp(16px,5.5vh,44px);">
+        <div class="title-display" style="font-size:clamp(44px,12vh,110px); font-weight:700; color:${esc(data.ink)}; text-shadow:0 0 50px ${esc(data.ink)}66; letter-spacing:2px; text-align:center;">
           ${esc(colorName(data.wordHex))}
         </div>
-        <div style="display:flex; gap:18px; flex-wrap:wrap; justify-content:center;">
+        <div style="display:flex; gap:clamp(10px,2.4vw,18px); flex-wrap:wrap; justify-content:center;">
           ${data.options
             .map(
               (hex, i) => `
-              <button class="stroop-dot" data-i="${i}" style="width:64px; height:64px; border-radius:50%; border:none;
+              <button class="stroop-dot" data-i="${i}" style="width:clamp(44px,9vh,64px); height:clamp(44px,9vh,64px); border-radius:50%; border:none;
                 background:${esc(hex)}; cursor:pointer; transition:transform 0.08s ease, opacity 0.15s ease;
                 box-shadow:0 6px 0 rgba(0,0,0,0.3);"></button>`,
             )

@@ -4,7 +4,7 @@ import { C2S } from '@quizz/shared';
 // En dev, Vite proxy /socket.io vers le serveur local. Pour CrazyGames, le
 // client (statique) et le serveur multijoueur sont hébergés séparément :
 // builder avec VITE_SERVER_URL=https://ton-serveur.example.com (wss requis).
-const SERVER_URL = import.meta.env.VITE_SERVER_URL;
+export const SERVER_URL = import.meta.env.VITE_SERVER_URL;
 export const socket = SERVER_URL ? io(SERVER_URL) : io();
 
 // Horloge locale STABLE (monotone) : contrairement à Date.now(), elle ne saute

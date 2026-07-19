@@ -9,6 +9,7 @@ export const LANG_LIST = ['en', 'fr', 'es', 'de', 'pt'];
 const S = {
   // ---------------------------------------------------------------- ENGLISH
   en: {
+    'intro.skip': 'Skip',
     'home.pseudo': 'Your nickname',
     'home.create': 'Create a room!',
     'home.or': 'OR',
@@ -150,6 +151,7 @@ const S = {
   },
   // ---------------------------------------------------------------- FRANÇAIS
   fr: {
+    'intro.skip': 'Passer',
     'home.pseudo': 'Ton pseudo',
     'home.create': 'Créer un salon !',
     'home.or': 'OU',
@@ -291,6 +293,7 @@ const S = {
   },
   // ---------------------------------------------------------------- ESPAÑOL
   es: {
+    'intro.skip': 'Saltar',
     'home.pseudo': 'Tu apodo',
     'home.create': '¡Crear una sala!',
     'home.or': 'O',
@@ -432,6 +435,7 @@ const S = {
   },
   // ---------------------------------------------------------------- DEUTSCH
   de: {
+    'intro.skip': 'Überspringen',
     'home.pseudo': 'Dein Spitzname',
     'home.create': 'Raum erstellen!',
     'home.or': 'ODER',
@@ -573,6 +577,7 @@ const S = {
   },
   // ---------------------------------------------------------------- PORTUGUÊS
   pt: {
+    'intro.skip': 'Pular',
     'home.pseudo': 'Seu apelido',
     'home.create': 'Criar uma sala!',
     'home.or': 'OU',

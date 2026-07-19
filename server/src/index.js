@@ -9,6 +9,9 @@ import { LobbyManager } from './lobby.js';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const app = express();
+// Ping léger pour réveiller le serveur (Render l'endort après inactivité) :
+// le client l'appelle dès le lancement, pendant la vidéo d'intro.
+app.get('/health', (req, res) => res.status(200).json({ ok: true }));
 // En production le serveur sert directement le build du client.
 app.use(express.static(path.resolve(__dirname, '../../client/dist')));
 

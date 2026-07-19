@@ -8,6 +8,7 @@ import { sdk } from './sdk.js';
 import { sound } from './ui/sound.js';
 import { t, tr, autodetect } from './ui/i18n.js';
 import { toast } from './ui/dom.js';
+import { introScreen } from './screens/intro.js';
 import { homeScreen } from './screens/home.js';
 import { lobbyScreen } from './screens/lobby.js';
 import { countdownScreen } from './screens/countdown.js';
@@ -17,6 +18,7 @@ import { victoryScreen } from './screens/victory.js';
 import { adScreen } from './screens/ad.js';
 
 const SCREENS = {
+  intro: introScreen,
   home: homeScreen,
   lobby: lobbyScreen,
   countdown: countdownScreen,
@@ -127,6 +129,25 @@ async function autoMultiplayer() {
   }
 }
 
+// Vidéo d'intro au lancement : occupe le joueur pendant que le serveur Render
+// (endormi après inactivité) se réveille en arrière-plan — voir screens/intro.js.
+// L'accueil n'apparaît qu'une fois la vidéo ET le SDK prêts.
+let introDone = false;
+let sdkDone = false;
+function enterGame() {
+  if (!introDone || !sdkDone) return;
+  // Un salon a pu être rejoint/créé pendant la vidéo (lien d'invitation, instant multiplayer).
+  show(store.room ? 'lobby' : 'home');
+  autoMultiplayer();
+}
+
+show('intro', {
+  onDone: () => {
+    introDone = true;
+    enterGame();
+  },
+});
+
 const sdkReady = sdk.init().finally(() => {
   // La locale CrazyGames n'est connue qu'après l'init du SDK.
   autodetect();
@@ -139,8 +160,8 @@ const sdkReady = sdk.init().finally(() => {
   if (!isUnlocked('accessory', store.accessory)) setAccessory('aucun');
   // Lien d'invitation CrazyGames → code du salon de l'ami.
   if (!store.inviteCode) store.inviteCode = String(sdk.inviteCode() ?? '').toUpperCase();
-  show('home');
-  autoMultiplayer();
+  sdkDone = true;
+  enterGame();
   // Invitation acceptée alors qu'on est déjà en jeu : on change de salon.
   sdk.onJoinRoom(async (code) => {
     if (!code) return;

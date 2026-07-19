@@ -12,13 +12,18 @@ export default {
     parts[data.slot] = '<span style="color:var(--rose); text-shadow:0 0 20px rgba(255,46,136,0.5);">X</span>';
 
     area.innerHTML = `
-      <div style="display:flex; flex-direction:column; align-items:center; gap:clamp(10px,3.25vh,26px);">
-        <div id="eq-display" class="title-display" style="font-size:clamp(26px,6.2vh,56px); font-weight:700; font-variant-numeric:tabular-nums; text-align:center;">
+      <div style="display:flex; flex-direction:column; align-items:center; gap:clamp(6px,1.6vh,16px);">
+        <div id="eq-display" class="title-display" style="font-size:clamp(22px,6.2vh,56px); font-weight:700; font-variant-numeric:tabular-nums; text-align:center;">
           ${parts.a} <span style="color:#3ad1ff;">${SYM[data.op]}</span> ${parts.b} <span style="color:var(--text-dim);">=</span> ${parts.c}
         </div>
-        <div id="eq-answer" class="code-slot" style="width:clamp(56px,10.5vh,84px); height:clamp(36px,7vh,48px); font-size:clamp(16px,3vh,22px);">?</div>
-        <div id="eq-pad" class="code-pad"></div>
-        <button id="eq-ok" class="btn btn-menthe" disabled>OK</button>
+        <div id="eq-answer" class="code-slot" style="width:clamp(48px,10.5vh,84px); height:clamp(32px,7vh,48px); font-size:clamp(15px,3vh,22px);">?</div>
+        <!-- Même formule que le pavé du jeu Code Secret (min(vw, vh, px)) : une
+             vraie hauteur MAX en plein écran, qui ne rétrécit que sur les
+             petits viewports. Le coefficient vh est un peu plus bas que celui
+             du Code Secret car l'équation a plus d'éléments autour du pavé
+             (l'expression + la case réponse + le bouton OK). -->
+        <div id="eq-pad" class="code-pad" style="width:min(70vw, 40vh, 280px);"></div>
+        <button id="eq-ok" class="btn btn-menthe" style="padding:clamp(8px,1.8vh,14px) clamp(20px,5vw,28px); font-size:clamp(13px,2.6vh,15px);" disabled>OK</button>
       </div>`;
 
     const answerEl = area.querySelector('#eq-answer');

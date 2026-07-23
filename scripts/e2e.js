@@ -4,7 +4,7 @@
 // cet ordre à chaque manche, quel que soit le jeu tiré au sort.
 import { spawn } from 'node:child_process';
 import { io } from 'socket.io-client';
-import { C2S, S2C, shapeArea } from '@quizz/shared';
+import { C2S, S2C, shapeArea, glassLevelFromHeight, glassHeightFromLevel } from '@quizz/shared';
 
 const PORT = 3995;
 const URL = `http://localhost:${PORT}`;
@@ -72,8 +72,15 @@ const strategies = {
     ][bot];
   },
   verre(prep, bot) {
-    const { wb, wt, water: f } = prep.data;
-    const level = Math.round(((wb * f + ((wt - wb) * f * f) / 2) / ((wb + wt) / 2)) * 100);
+    const { wb, wt, mode } = prep.data;
+    if (mode === 'fill') {
+      const { target } = prep.data;
+      const off = [0, 10, 40][bot] * (target > 50 ? -1 : 1);
+      const wantLevel = clamp(target + off, 0, 100);
+      const frac = clamp(glassHeightFromLevel(wb, wt, wantLevel), 0, 1);
+      return { delay: 200 + bot * 150, data: { frac } };
+    }
+    const level = Math.round(glassLevelFromHeight(wb, wt, prep.data.water));
     const off = [0, 10, 40][bot] * (level > 50 ? -1 : 1);
     return { delay: 200 + bot * 150, data: { pct: clamp(level + off, 0, 100) } };
   },
@@ -169,6 +176,29 @@ const strategies = {
       { delay: 600, data: { side: answer } },
       { delay: 400, data: { side: wrong } },
     ][bot];
+  },
+  angle(prep, bot) {
+    const target = prep.data.mode === 'set' ? prep.data.target : prep.data.shownDeg;
+    const off = [0, 8, 30][bot];
+    return { delay: 200 + bot * 150, data: { deg: clamp(target + off, 0, 180) } };
+  },
+  diff(prep, bot) {
+    const target = prep.data.cells.findIndex((c) => c.face !== c.realFace || c.accessory !== c.realAccessory);
+    const wrong = (target + 1) % prep.data.cells.length;
+    const after = prep.data.showMs;
+    return [
+      { delay: after + 150, data: { index: target } },
+      { delay: after + 450, data: { index: target } },
+      { delay: after + 300, data: { index: wrong } },
+    ][bot];
+  },
+  couleur(prep, bot) {
+    const offs = [0, 15, 55][bot];
+    const nudge = (v) => clamp(v + offs * (v > 127 ? -1 : 1), 0, 255);
+    return {
+      delay: 200 + bot * 150,
+      data: { r: nudge(prep.data.r), g: nudge(prep.data.g), b: nudge(prep.data.b) },
+    };
   },
 };
 

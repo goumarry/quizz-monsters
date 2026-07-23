@@ -48,7 +48,7 @@ export default {
       update();
     });
 
-    okBtn.addEventListener('click', async () => {
+    const send = async () => {
       if (locked || typed.length === 0) return;
       locked = true;
       pad.style.pointerEvents = 'none';
@@ -56,9 +56,14 @@ export default {
       const res = await ctx.submit({ value: Number(typed) });
       answerEl.classList.add(res?.success ? 'correct' : 'wrong');
       ctx.answered(res?.success);
-    });
+    };
+
+    okBtn.addEventListener('click', send);
 
     return {
+      // Le temps est écoulé sans clic sur "OK" : si le joueur a tapé une
+      // réponse, on l'envoie quand même plutôt que de compter une non-réponse.
+      timeout: send,
       // Fin de manche : la vraie valeur de X remplace la réponse tapée.
       reveal({ answer }) {
         locked = true;

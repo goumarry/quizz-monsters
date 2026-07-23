@@ -8,8 +8,15 @@ import { t, tr } from '../ui/i18n.js';
 import { getMinigame } from '../minigames/index.js';
 
 // Ids des mini-jeux du tambour de la roulette (noms localisés via mg.<id>.name).
-const GAME_IDS = ['intrus', 'chrono', 'spam', 'aires', 'verre', 'feu', 'stroop', 'memo', 'dessine', 'code', 'equation', 'foule'];
+const GAME_IDS = [
+  'intrus', 'chrono', 'spam', 'aires', 'verre', 'feu', 'stroop', 'memo', 'dessine', 'code', 'equation', 'foule',
+  'angle', 'diff', 'couleur',
+];
 const SLOT_ITEM_H = 96; // = hauteur .slot-item / .slot-frame (main.css)
+// Marge avant le vrai buzzer pour l'auto-submit de fin de manche : si on
+// envoyait pile à remaining=0, le paquet arrivait souvent après la fenêtre de
+// grâce serveur (TIMING.RESULT_GRACE_MS) et la réponse était rejetée (0 pt).
+const AUTO_SUBMIT_LEAD_MS = 300;
 
 export function roundScreen(root, prep) {
   const { round, total, minigameId, title, data, startAt, duration } = prep;
@@ -130,6 +137,7 @@ export function roundScreen(root, prep) {
   const instance = mg ? mg.mount(area, data, ctx) : null;
 
   let started = false;
+  let timedOut = false;
   const tick = () => {
     const now = clock();
     if (!started) {
@@ -161,6 +169,13 @@ export function roundScreen(root, prep) {
     if (started) {
       const remaining = Math.max(0, localStart + duration - now);
       timebarFill.style.width = `${(remaining / duration) * 100}%`;
+      if (!timedOut && remaining <= AUTO_SUBMIT_LEAD_MS) {
+        // On envoie la dernière valeur réglée/tapée un peu AVANT le vrai
+        // buzzer (cf. AUTO_SUBMIT_LEAD_MS) pour que le paquet ait le temps
+        // d'arriver dans la fenêtre de grâce serveur.
+        timedOut = true;
+        instance?.timeout?.();
+      }
       if (remaining <= 0) return; // fin — on attend le classement du serveur
     }
     raf = requestAnimationFrame(tick);

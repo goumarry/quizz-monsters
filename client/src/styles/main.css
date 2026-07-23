@@ -207,6 +207,44 @@ a:hover { color: var(--rose); }
 }
 .range:disabled { opacity: 0.45; cursor: default; }
 
+/* Piste arc-en-ciel pour la sélection de teinte (Trouve la Couleur). */
+.range-hue {
+  background: linear-gradient(90deg, #ff2e2e, #ffd60a, #7cff6b, #2effc7, #3ad1ff, #b967ff, #ff2e88, #ff2e2e);
+}
+
+/* ==== Grille « Les 7 Différences » ==========================================
+   Toujours 16 avatars : grille fixe 4×4, en mobile comme en desktop — les
+   cases rétrécissent (clamp) plutôt que de changer le nombre de colonnes. */
+.diff-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(5px, 1.6vw, 14px);
+  width: min(94vw, 70vh, 460px);
+}
+.diff-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: clamp(5px, 1.4vh, 10px) 2px clamp(4px, 1.1vh, 8px);
+  background: var(--surface-2);
+  border: 2px solid transparent;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: transform 0.08s ease, border-color 0.08s ease;
+}
+.diff-cell:hover { transform: scale(1.05); }
+.diff-name {
+  font-size: 11px;
+  color: var(--text-dim);
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.diff-cell.diff-correct { border-color: var(--menthe); box-shadow: 0 0 14px rgba(46, 255, 199, 0.55); }
+.diff-cell.diff-wrong { border-color: var(--corail); box-shadow: 0 0 14px rgba(255, 93, 93, 0.5); animation: shake 0.3s ease; }
+
 /* ==== Toast ================================================================= */
 .toast {
   position: fixed;

@@ -71,7 +71,7 @@ export class Game {
   #startRound() {
     const def = pickMinigame(this.lastMinigameId);
     this.lastMinigameId = def.id;
-    const created = def.create(this.room.settings);
+    const created = def.create(this.room.settings, this.room);
     const startAt = Date.now() + TIMING.PREPARE_MS;
     this.round = {
       def,
